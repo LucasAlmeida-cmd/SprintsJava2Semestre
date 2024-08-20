@@ -22,8 +22,9 @@ public class Oficina {
         for (Agendamento agendamento : agendamentos) {
             if (agendamento.getData().equals(novoAgendamento.getData()) && agendamento.getHora().equals(novoAgendamento.getHora()))
                 throw new IllegalArgumentException("Data e Hora já existentes");
+
         }
-        return false;
+        return true;
     }
 
     public String getLocalizacaoOficina() {
