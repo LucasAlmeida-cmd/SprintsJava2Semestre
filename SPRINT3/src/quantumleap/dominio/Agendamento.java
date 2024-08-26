@@ -1,5 +1,7 @@
 package quantumleap.dominio;
 
+import java.sql.ResultSet;
+
 public class Agendamento {
     private Diagnostico diagnostico;
     private String data;
@@ -12,6 +14,7 @@ public class Agendamento {
         this.hora = hora;
     }
 
+    public String getDescricao(){return diagnostico.getDescricao();}
     public String getData() {
         return data;
     }
@@ -26,5 +29,21 @@ public class Agendamento {
 
     public String getLocalizacao(){
         return localizacao;
+    }
+
+    public Diagnostico getDiagnostico() {
+        return diagnostico;
+    }
+
+    public void setDiagnostico(Diagnostico diagnostico) {
+        this.diagnostico = diagnostico;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    public void setHora(String hora) {
+        this.hora = hora;
     }
 }

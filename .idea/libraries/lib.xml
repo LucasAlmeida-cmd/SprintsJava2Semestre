@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/SPRINT3/lib/junit-jupiter-api-5.11.0-M2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/SPRINT3/lib/ojdbc11-23.5.0.24.07.jar!/" />
+      <root url="jar://$PROJECT_DIR$/SPRINT3/lib/junit-platform-commons-1.11.0-M2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -23,6 +23,32 @@ public class ProblemasExistentes {
         return peca.getPrecoPeca();
     }
 
+    public void setDescricaoProblema(String descricaoProblema) {
+        this.descricaoProblema = descricaoProblema;
+    }
+
+    public void setNomeProblema(String nomeProblema) {
+        this.nomeProblema = nomeProblema;
+    }
+
+    public void setCustoMaoDeObraProblema(double custoMaoDeObraProblema) {
+        this.custoMaoDeObraProblema = custoMaoDeObraProblema;
+    }
+
+    public void setQtdPeca(int qtdPeca) {
+        this.qtdPeca = qtdPeca;
+    }
+
+    public Peca getPeca() {
+        return peca;
+    }
+
+    public void setPeca(Peca peca) {
+        this.peca = peca;
+    }
+
+    public String getDescricaoProblema(){ return descricaoProblema;}
+
     public int getQtdPeca(){
         return qtdPeca;
     }
@@ -34,4 +60,7 @@ public class ProblemasExistentes {
     public String getNomeProblema() {
         return nomeProblema;
     }
+
+
+
 }

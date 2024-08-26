@@ -18,6 +18,8 @@ public class Oficina {
         this.agendamentos = agendamentos;
     }
 
+
+
     public boolean verificaAgendamento(Agendamento novoAgendamento) {
         for (Agendamento agendamento : agendamentos) {
             if (agendamento.getData().equals(novoAgendamento.getData()) && agendamento.getHora().equals(novoAgendamento.getHora()))
@@ -25,6 +27,42 @@ public class Oficina {
 
         }
         return true;
+    }
+
+    public String getNomeOficina() {
+        return nomeOficina;
+    }
+
+    public void setNomeOficina(String nomeOficina) {
+        this.nomeOficina = nomeOficina;
+    }
+
+    public void setLocalizacaoOficina(String localizacaoOficina) {
+        this.localizacaoOficina = localizacaoOficina;
+    }
+
+    public String getTelefoneOficina() {
+        return telefoneOficina;
+    }
+
+    public void setTelefoneOficina(String telefoneOficina) {
+        this.telefoneOficina = telefoneOficina;
+    }
+
+    public String getEmailOficina() {
+        return emailOficina;
+    }
+
+    public void setEmailOficina(String emailOficina) {
+        this.emailOficina = emailOficina;
+    }
+
+    public ArrayList<Agendamento> getAgendamentos() {
+        return agendamentos;
+    }
+
+    public void setAgendamentos(ArrayList<Agendamento> agendamentos) {
+        this.agendamentos = agendamentos;
     }
 
     public String getLocalizacaoOficina() {

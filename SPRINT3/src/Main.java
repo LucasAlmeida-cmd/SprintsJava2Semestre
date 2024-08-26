@@ -1,11 +1,14 @@
 import quantumleap.dominio.*;
 
 import java.sql.SQLOutput;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParseException {
         Scanner sc = new Scanner(System.in);
 
         Guincho guincho1 = new Guincho("123", 250, 100000);
@@ -17,12 +20,12 @@ public class Main {
         problemas.add(problema1);
         problemas.add(problema2);
 
-        Veiculo veiculo = new Veiculo("Fiat", "Palio", "2005", 100000.00, "EFG4H56");
+        Veiculo veiculo = new Veiculo("Fiat", "Palio", DateUtil.parseYear("2005"), 100000.00, "EFG4H56");
         Cliente cliente = new Cliente("Arthur", "Arthur@gmail.com", "111111111", "senha", true, "Rio Paulo");
         Diagnostico diag1 = new Diagnostico(cliente, veiculo, problema1,guincho1);
         Agendamento ag1 = new Agendamento(diag1, "12/12/2024", "12:30");
 
-        Veiculo veiculo2 = new Veiculo("Fiat", "Palio", "2005", 100000.00, "ABC1D23");
+        Veiculo veiculo2 = new Veiculo("Fiat", "Palio", DateUtil.parseYear("2005"), 100000.00, "ABC1D23");
         Cliente cliente2 = new Cliente("Arthur", "Arthur@gmail.com", "111111111", "senha", false, "São Paulo");
         Diagnostico diag2 = new Diagnostico(cliente2, veiculo, problema2, guincho1);
         Agendamento ag2 = new Agendamento(diag2, "13/12/2024", "12:30");
@@ -66,8 +69,15 @@ public class Main {
         String montadoraVeiculo = sc.nextLine();
         System.out.println("Insira o modelo do seu veículo: ");
         String modeloVeiculo = sc.nextLine();
-        System.out.println("Insira o ano do veículo: ");
-        String anoVeiculo = sc.nextLine();
+        System.out.println("Insira o ano do veículo (formato yyyy):");
+        String anoVeiculoStr = sc.nextLine();
+        Date anoVeiculo = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy");
+            anoVeiculo = sdf.parse(anoVeiculoStr);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         System.out.println("Insira a quilometragem: ");
         double quantidadeQuilometros = sc.nextDouble();
         sc.nextLine();

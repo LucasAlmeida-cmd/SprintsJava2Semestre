@@ -23,7 +23,7 @@ public class Diagnostico {
         return orcamento;
     }
 
-
+    public String getDescricao(){ return problemasExistentes.getDescricaoProblema();}
 
     public double adicionandoGuincho(){
         return orcamento + guincho.getPreco() + problemasExistentes.getCustoMaoDeObraProblema() + problemasExistentes.getQtdPeca()  * 500;

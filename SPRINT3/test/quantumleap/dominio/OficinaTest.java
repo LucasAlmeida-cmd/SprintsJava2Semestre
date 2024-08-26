@@ -3,22 +3,23 @@ package quantumleap.dominio;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 
 public class OficinaTest {
 
     @Test
-    void verificaAgendamento_comValoresValidos_deveRetornarTrue(){
+    void verificaAgendamento_comValoresValidos_deveRetornarTrue() throws ParseException {
         Peca peca = new Peca("vira", 500.00, "Cotinental", "modelo1");
         ProblemasExistentes problema = new ProblemasExistentes("nome1", "descrição1", 500.00, 3, peca);
         Guincho guincho = new Guincho("123", 250, 100000);
 
-        Veiculo veiculo = new Veiculo("Fiat", "Palio", "2005", 100000.00, "ABC1D23");
+        Veiculo veiculo = new Veiculo("Fiat", "Palio", DateUtil.parseYear("2005"), 100000.00, "ABC1D23");
         Cliente cliente = new Cliente("Arthur", "Arthur@gmail.com", "111111111", "senha", false, "São Paulo");
         Diagnostico diag = new Diagnostico(cliente, veiculo, problema, guincho);
         Agendamento ag = new Agendamento(diag, "13/12/2024", "12:30");
 
-        Veiculo veiculo1 = new Veiculo("Fiat", "Palio", "2005", 100000.00, "EFG4H56");
+        Veiculo veiculo1 = new Veiculo("Fiat", "Palio", DateUtil.parseYear("2005"), 100000.00, "EFG4H56");
         Cliente cliente1 = new Cliente("Arthur", "Arthur@gmail.com", "111111111", "senha", true, "Rio Paulo");
         Diagnostico diag1 = new Diagnostico(cliente, veiculo, problema,guincho);
         Agendamento ag1 = new Agendamento(diag1, "12/12/2024", "12:00");
@@ -34,17 +35,17 @@ public class OficinaTest {
     }
 
     @Test
-    void verificaAgendamento_comValoresValidos_deveRetornarFalse(){
+    void verificaAgendamento_comValoresValidos_deveRetornarFalse() throws ParseException {
         Peca peca = new Peca("vira", 500.00, "Cotinental", "modelo1");
         ProblemasExistentes problema = new ProblemasExistentes("nome1", "descrição1", 500.00, 3, peca);
         Guincho guincho = new Guincho("123", 250, 100000);
 
-        Veiculo veiculo = new Veiculo("Fiat", "Palio", "2005", 100000.00, "ABC1D23");
+        Veiculo veiculo = new Veiculo("Fiat", "Palio", DateUtil.parseYear("2005"), 100000.00, "ABC1D23");
         Cliente cliente = new Cliente("Arthur", "Arthur@gmail.com", "111111111", "senha", false, "São Paulo");
         Diagnostico diag = new Diagnostico(cliente, veiculo, problema, guincho);
         Agendamento ag = new Agendamento(diag, "13/12/2024", "12:30");
 
-        Veiculo veiculo1 = new Veiculo("Fiat", "Palio", "2005", 100000.00, "EFG4H56");
+        Veiculo veiculo1 = new Veiculo("Fiat", "Palio", DateUtil.parseYear("2005"), 100000.00, "EFG4H56");
         Cliente cliente1 = new Cliente("Arthur", "Arthur@gmail.com", "111111111", "senha", true, "Rio Paulo");
         Diagnostico diag1 = new Diagnostico(cliente, veiculo, problema,guincho);
         Agendamento ag1 = new Agendamento(diag1, "12/12/2024", "12:00");

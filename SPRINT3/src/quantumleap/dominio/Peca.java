@@ -1,19 +1,67 @@
 package quantumleap.dominio;
 
 public class Peca {
+    private Long idPeca;
     private String nomePeca;
     private double precoPeca;
     private String marcaPeca;
     private String modeloPeca;
 
-    public Peca(String nomePeca, double precoPeca, String marcaPeca, String modeloPeca){
+
+    public Peca(String nomePeca, double precoPeca, String marcaPeca, String modeloPeca) {
         this.nomePeca = nomePeca;
         this.precoPeca = precoPeca;
         this.marcaPeca = marcaPeca;
         this.modeloPeca = modeloPeca;
     }
 
-    protected double getPrecoPeca(){
+
+    public Peca(Long idPeca, String nomePeca, double precoPeca, String marcaPeca, String modeloPeca) {
+        this.idPeca = idPeca;
+        this.nomePeca = nomePeca;
+        this.precoPeca = precoPeca;
+        this.marcaPeca = marcaPeca;
+        this.modeloPeca = modeloPeca;
+    }
+
+
+    public Long getIdPeca() {
+        return idPeca;
+    }
+
+    public void setIdPeca(Long idPeca) {
+        this.idPeca = idPeca;
+    }
+
+    public String getNomePeca() {
+        return nomePeca;
+    }
+
+    public void setNomePeca(String nomePeca) {
+        this.nomePeca = nomePeca;
+    }
+
+    public double getPrecoPeca() {
         return precoPeca;
+    }
+
+    public void setPrecoPeca(double precoPeca) {
+        this.precoPeca = precoPeca;
+    }
+
+    public String getMarcaPeca() {
+        return marcaPeca;
+    }
+
+    public void setMarcaPeca(String marcaPeca) {
+        this.marcaPeca = marcaPeca;
+    }
+
+    public String getModeloPeca() {
+        return modeloPeca;
+    }
+
+    public void setModeloPeca(String modeloPeca) {
+        this.modeloPeca = modeloPeca;
     }
 }

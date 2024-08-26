@@ -18,4 +18,23 @@ public class Guincho {
         return preco;
     }
 
+    public String getPlaca() {
+        return placa;
+    }
+
+    public void setPlaca(String placa) {
+        this.placa = placa;
+    }
+
+    public double getCargaMaxima() {
+        return cargaMaxima;
+    }
+
+    public void setCargaMaxima(double cargaMaxima) {
+        this.cargaMaxima = cargaMaxima;
+    }
+
+    public void setPreco(double preco) {
+        this.preco = preco;
+    }
 }
