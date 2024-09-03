@@ -3,6 +3,7 @@ package quantumleap.banco;
 import quantumleap.dominio.Peca;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class PecaDAO {
 
@@ -13,44 +14,38 @@ public class PecaDAO {
 
 
     public void adicionaPeca(Peca peca) {
-        Long idPeca = obterProximoIdPeca();
-
-        String sqlInsert = "INSERT INTO tb_qfx_peca (id_peca, nome_peca, preco_peca, marca_peca, modelo_peca) VALUES (?, ?, ?, ?, ?)";
-
-        try (PreparedStatement comandoDeInsercao = conexao.prepareStatement(sqlInsert)) {
-            comandoDeInsercao.setLong(1, idPeca);
-            comandoDeInsercao.setString(2, peca.getNomePeca());
-            comandoDeInsercao.setDouble(3, peca.getPrecoPeca());
-            comandoDeInsercao.setString(4, peca.getMarcaPeca());
-            comandoDeInsercao.setString(5, peca.getModeloPeca());
+        try {
+            String sqlInsert = "INSERT INTO tb_qfx_peca (nome_peca, preco_peca, marca_peca, modelo_peca) VALUES (?, ?, ?, ?)";
+            PreparedStatement comandoDeInsercao = conexao.prepareStatement(sqlInsert);
+            comandoDeInsercao.setString(1, peca.getNomePeca());
+            comandoDeInsercao.setDouble(2, peca.getPrecoPeca());
+            comandoDeInsercao.setString(3, peca.getMarcaPeca());
+            comandoDeInsercao.setString(4, peca.getModeloPeca());
 
             comandoDeInsercao.executeUpdate();
-            peca.setIdPeca(idPeca); // Atualiza o ID da peça no objeto
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-
-    public Peca obterPecaPorId(Long idPeca) {
+    public Peca buscarPecaPorId(Long idPeca) {
         Peca peca = null;
         try {
             String sql = "SELECT nome_peca, preco_peca, marca_peca, modelo_peca FROM tb_qfx_peca WHERE id_peca = ?";
-            PreparedStatement pstmt = conexao.prepareStatement(sql);
-            pstmt.setLong(1, idPeca);
-            ResultSet rs = pstmt.executeQuery();
-
-            if (rs.next()) {
-                String nomePeca = rs.getString("nome_peca");
-                double precoPeca = rs.getDouble("preco_peca");
-                String marcaPeca = rs.getString("marca_peca");
-                String modeloPeca = rs.getString("modelo_peca");
-                peca = new Peca(nomePeca, precoPeca, marcaPeca, modeloPeca);
-                peca.setIdPeca(idPeca); // Defina o ID da peça
+            try (PreparedStatement pstmt = conexao.prepareStatement(sql)) {
+                pstmt.setLong(1, idPeca);
+                try (ResultSet rs = pstmt.executeQuery()) {
+                    if (rs.next()) {
+                        peca = new Peca();
+                        peca.setIdPeca(idPeca);
+                        peca.setNomePeca(rs.getString("nome_peca"));
+                        peca.setPrecoPeca(rs.getDouble("preco_peca"));
+                        peca.setMarcaPeca(rs.getString("marca_peca"));
+                        peca.setModeloPeca(rs.getString("modelo_peca"));
+                    }
+                }
             }
-            rs.close();
-            pstmt.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -59,22 +54,59 @@ public class PecaDAO {
 
 
 
+    public void atualizarPeca(Peca peca) {
+        String sqlUpdate = "UPDATE tb_qfx_peca SET nome_peca = ?, preco_peca = ?, marca_peca = ?, modelo_peca = ? WHERE id_peca = ?";
 
+        try (PreparedStatement comandoDeAtualizacao = conexao.prepareStatement(sqlUpdate)) {
+            comandoDeAtualizacao.setString(1, peca.getNomePeca());
+            comandoDeAtualizacao.setDouble(2, peca.getPrecoPeca());
+            comandoDeAtualizacao.setString(3, peca.getMarcaPeca());
+            comandoDeAtualizacao.setString(4, peca.getModeloPeca());
+            comandoDeAtualizacao.setLong(5, peca.getIdPeca());
 
+            comandoDeAtualizacao.executeUpdate();
 
-    private Long obterProximoIdPeca() {
-        Long id = null;
-        try {
-            String sql = "SELECT SEQ_PECA_ID.NEXTVAL FROM DUAL";
-            PreparedStatement comandoDeGeracao = conexao.prepareStatement(sql);
-            ResultSet rs = comandoDeGeracao.executeQuery();
-            while(rs.next()) {
-                id = rs.getLong(1);
-            }
-            rs.close();
-        }catch(SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return id;
     }
+
+    public void removerPeca(Long idPeca) {
+        String sqlDelete = "DELETE FROM tb_qfx_peca WHERE id_peca = ?";
+
+        try (PreparedStatement comandoDeRemocao = conexao.prepareStatement(sqlDelete)) {
+            comandoDeRemocao.setLong(1, idPeca);
+
+            comandoDeRemocao.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public ArrayList<Peca> listarPeca(){
+        ArrayList<Peca> pecas = new ArrayList<>();
+        try{
+            String sql = "SELECT * FROM tb_qfx_peca";
+            PreparedStatement pstmt = conexao.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Peca peca = new Peca();
+                peca.setIdPeca(rs.getLong("id_peca"));
+                peca.setNomePeca(rs.getString(("nome_peca")));
+                peca.setPrecoPeca(rs.getDouble("preco_peca"));
+                peca.setModeloPeca(rs.getString("modelo_peca"));
+                peca.setMarcaPeca(rs.getString("marca_peca"));
+                pecas.add(peca);
+            }
+            rs.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return pecas;
+
+    }
+
+
 }

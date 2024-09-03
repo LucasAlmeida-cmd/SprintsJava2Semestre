@@ -8,6 +8,6 @@ public class DateUtil {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy");
 
     public static Date parseYear(String yearStr) throws ParseException {
-        return DATE_FORMAT.parse(yearStr); // Assume o primeiro dia do ano como data
+        return DATE_FORMAT.parse(yearStr);
     }
 }

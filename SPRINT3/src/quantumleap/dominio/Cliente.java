@@ -3,6 +3,7 @@ package quantumleap.dominio;
 import java.util.ArrayList;
 
 public class Cliente {
+    private Long idCliente;
     private String nomeCliente;
     private String emailCliente;
     private String telefoneCliente;
@@ -20,6 +21,8 @@ public class Cliente {
         this.veiculosDoCliente = new ArrayList<Veiculo>();
         this.localizacaoCliente = localizacaoCliente;
     }
+
+    public Cliente() {}
 
     public void atualizaCadastro(String nomeCliente, String emailCliente, String telefoneCliente, String senhaCliente, boolean clientePorto){
         if(nomeCliente != null){
@@ -69,6 +72,10 @@ public class Cliente {
         this.telefoneCliente = telefoneCliente;
     }
 
+    public boolean isClientePorto() {
+        return clientePorto;
+    }
+
     public void setClientePorto(boolean clientePorto) {
         this.clientePorto = clientePorto;
     }
@@ -89,15 +96,23 @@ public class Cliente {
         this.veiculosDoCliente = veiculosDoCliente;
     }
 
+    public String getLocalizacaoCliente() {
+        return localizacaoCliente;
+    }
+
     public void setLocalizacaoCliente(String localizacaoCliente) {
         this.localizacaoCliente = localizacaoCliente;
     }
 
-    public boolean isClientePorto() {
-        return clientePorto;
+    public Long getIdCliente() {
+        return idCliente;
     }
 
-    public String getLocalizacaoCliente(){
-        return localizacaoCliente;
+    public void setIdCliente(Long idCliente) {
+        this.idCliente = idCliente;
+    }
+
+    public boolean getClientePorto() {
+        return clientePorto;
     }
 }

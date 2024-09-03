@@ -1,6 +1,7 @@
 package quantumleap.dominio;
 
 public class ProblemasExistentes {
+    private long idProblemas;
     private String nomeProblema;
     private String descricaoProblema;
     private double custoMaoDeObraProblema;
@@ -61,6 +62,11 @@ public class ProblemasExistentes {
         return nomeProblema;
     }
 
+    public long getIdProblemas() {
+        return idProblemas;
+    }
 
-
+    public void setIdProblemas(long idProblemas) {
+        this.idProblemas = idProblemas;
+    }
 }

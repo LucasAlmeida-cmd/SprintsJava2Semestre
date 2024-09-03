@@ -1,6 +1,7 @@
 package quantumleap.dominio;
 
 public class Guincho {
+    private long idGuincho;
     private String placa;
     private double preco;
     private double cargaMaxima;
@@ -13,6 +14,8 @@ public class Guincho {
         this.preco = preco;
         this.cargaMaxima = cargaMaxima;
     }
+
+    public Guincho(){}
 
     public double getPreco(){
         return preco;
@@ -36,5 +39,13 @@ public class Guincho {
 
     public void setPreco(double preco) {
         this.preco = preco;
+    }
+
+    public long getIdGuincho() {
+        return idGuincho;
+    }
+
+    public void setIdGuincho(long idGuincho) {
+        this.idGuincho = idGuincho;
     }
 }

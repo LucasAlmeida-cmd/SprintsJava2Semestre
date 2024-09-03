@@ -7,12 +7,15 @@ public class Agendamento {
     private String data;
     private String hora;
     private String localizacao;
+    private Oficina oficina;
 
     public Agendamento(Diagnostico diagnostico, String data, String hora) {
         this.diagnostico = diagnostico;
         this.data = data;
         this.hora = hora;
     }
+
+
 
     public String getDescricao(){return diagnostico.getDescricao();}
     public String getData() {
@@ -46,4 +49,6 @@ public class Agendamento {
     public void setHora(String hora) {
         this.hora = hora;
     }
+
+
 }

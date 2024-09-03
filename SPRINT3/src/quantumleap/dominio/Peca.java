@@ -15,13 +15,8 @@ public class Peca {
         this.modeloPeca = modeloPeca;
     }
 
+    public Peca(){
 
-    public Peca(Long idPeca, String nomePeca, double precoPeca, String marcaPeca, String modeloPeca) {
-        this.idPeca = idPeca;
-        this.nomePeca = nomePeca;
-        this.precoPeca = precoPeca;
-        this.marcaPeca = marcaPeca;
-        this.modeloPeca = modeloPeca;
     }
 
 
@@ -63,5 +58,9 @@ public class Peca {
 
     public void setModeloPeca(String modeloPeca) {
         this.modeloPeca = modeloPeca;
+    }
+
+    public void setIdPeca(long idPeca) {
+        this.idPeca = idPeca;
     }
 }

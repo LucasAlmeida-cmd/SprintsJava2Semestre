@@ -20,6 +20,7 @@ public class Oficina {
 
 
 
+
     public boolean verificaAgendamento(Agendamento novoAgendamento) {
         for (Agendamento agendamento : agendamentos) {
             if (agendamento.getData().equals(novoAgendamento.getData()) && agendamento.getHora().equals(novoAgendamento.getHora()))
