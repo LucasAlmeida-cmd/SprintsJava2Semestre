@@ -10,7 +10,7 @@ public class GuinchoDAOTest {
 
     @Test
     public void adicionandoGuincho(){
-        Guincho guincho = new Guincho("Guinc3", 1000, 100000);
+        Guincho guincho = new Guincho("AAAA", 1000, 100000);
         GuinchoDAO guinchoDAO = new GuinchoDAO();
         guinchoDAO.adicionaGuincho(guincho);
     }

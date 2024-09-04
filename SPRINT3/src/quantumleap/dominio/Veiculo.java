@@ -68,7 +68,7 @@ public class Veiculo {
         this.idVeiculo = idVeiculo;
     }
 
-    // Métodos adicionados
+
     public String getNomeCliente() {
         return nomeCliente;
     }

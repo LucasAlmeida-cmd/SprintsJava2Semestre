@@ -9,7 +9,7 @@ public class PecaDAOTest {
 
     @Test
     void adicionaPeca(){
-        Peca peca = new Peca("Peça2", 100, "teste", "teste");
+        Peca peca = new Peca("Peça", 100, "teste", "teste");
         PecaDAO pecaDAO = new PecaDAO();
         pecaDAO.adicionaPeca(peca);
     }
@@ -40,20 +40,20 @@ public class PecaDAOTest {
     }
 
 
-//    @Test
-//    void listandoPecas(){
-//        PecaDAO pecaDAO = new PecaDAO();
-//        ArrayList<Peca> pecas = pecaDAO.listarPeca();
-//
-//        for (Peca peca: pecas){
-//            System.out.println("ID: " + peca.getIdPeca());
-//            System.out.println("Nome Peça: " + peca.getNomePeca());
-//            System.out.println("Preço: " + peca.getPrecoPeca());
-//            System.out.println("Modelo: "+ peca.getModeloPeca());
-//            System.out.println("Marca: "+ peca.getMarcaPeca());
-//            System.out.println("------------------------------");
-//        }
-//    }
+    @Test
+    void listandoPecas(){
+        PecaDAO pecaDAO = new PecaDAO();
+        ArrayList<Peca> pecas = pecaDAO.listarPeca();
+
+        for (Peca peca: pecas){
+            System.out.println("ID: " + peca.getIdPeca());
+            System.out.println("Nome Peça: " + peca.getNomePeca());
+            System.out.println("Preço: " + peca.getPrecoPeca());
+            System.out.println("Modelo: "+ peca.getModeloPeca());
+            System.out.println("Marca: "+ peca.getMarcaPeca());
+            System.out.println("------------------------------");
+        }
+    }
 
     @Test
     void removendoPecaPeloId(){

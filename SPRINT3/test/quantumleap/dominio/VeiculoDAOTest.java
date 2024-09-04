@@ -20,7 +20,7 @@ public class VeiculoDAOTest{
         veiculos.add(ve2);
 
 
-        long idCliente = 2;
+        long idCliente = 1;
 
         ClienteDAO clienteDAO = new ClienteDAO();
         Cliente cliente = clienteDAO.buscarClientePorId(idCliente);
@@ -28,7 +28,7 @@ public class VeiculoDAOTest{
         if (cliente == null){
             System.out.println("Usuario nao encontrado");
         } else {
-            veiculoDAO.adicionarVeiculo(cliente.getIdCliente(), veiculos);
+            veiculoDAO.adicionarVeiculo(cliente, veiculos);
         }
     }
 

@@ -9,7 +9,7 @@ public class ClienteDAOTest {
 
     @Test
     public void testAdicionaCliente() {
-        Cliente cliente = new Cliente("ClienteTest", "clientetest@gmail.com", "11111111111", "senhaclientetest", true, "São Paulo");
+        Cliente cliente = new Cliente("ClienteTest1", "c111@gmail.com", "11111111111", "senhaclientetest", true, "São Paulo");
         ClienteDAO clienteDAO = new ClienteDAO();
         clienteDAO.adicionarCliente(cliente);
     }

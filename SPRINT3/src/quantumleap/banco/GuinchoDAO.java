@@ -18,15 +18,26 @@ public class GuinchoDAO {
 
 
     public void adicionaGuincho(Guincho guincho) {
+        String sqlInsert = "INSERT INTO tb_qfx_guincho (placa_guincho, preco_guincho, carga_maxima) VALUES (?, ?, ?)";
         try {
-            String sqlInsert = "INSERT INTO tb_qfx_guincho (placa_guincho, preco_guincho, carga_maxima) VALUES (?, ?, ?)";
-            PreparedStatement comandoDeInsercao = conexao.prepareStatement(sqlInsert);
+            PreparedStatement comandoDeInsercao = conexao.prepareStatement(sqlInsert, new String[] {"id_guincho"});
             comandoDeInsercao.setString(1, guincho.getPlaca());
             comandoDeInsercao.setDouble(2, guincho.getPreco());
             comandoDeInsercao.setDouble(3, guincho.getCargaMaxima());
 
-            comandoDeInsercao.execute();
+            int rowsAffected = comandoDeInsercao.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new SQLException("Falha ao inserir o cliente, nenhuma linha foi afetada.");
+            }
+            try (ResultSet generatedKeys = comandoDeInsercao.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    guincho.setIdGuincho(generatedKeys.getLong(1));
+                } else {
+                    throw new SQLException("Falha ao obter o ID gerado para o cliente.");
+                }
+            }
             comandoDeInsercao.close();
+            System.out.println("Guincho ok ");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -16,9 +16,9 @@ public class ProblemasExistentesDAO {
     }
 
     public void adicionarProblemaExistente(ProblemasExistentes problema) {
+        String sqlInsert = "INSERT INTO tb_qfx_problemas_existentes (nome_problema, descricao_problema, custo_mao_de_obra_problema, qtd_peca, id_peca) VALUES (?, ?, ?, ?, ?)";
         try {
-            String sqlInsert = "INSERT INTO tb_qfx_problemas_existentes (nome_problema, descricao_problema, custo_mao_de_obra_problema, qtd_peca, id_peca) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement comandoInsercao = conexao.prepareStatement(sqlInsert);
+            PreparedStatement comandoInsercao = conexao.prepareStatement(sqlInsert, new String[] {"id_problema"});
 
 
             comandoInsercao.setString(1, problema.getNomeProblema());
@@ -27,7 +27,19 @@ public class ProblemasExistentesDAO {
             comandoInsercao.setInt(4, problema.getQtdPeca());
             comandoInsercao.setLong(5, problema.getPeca().getIdPeca());
 
-            comandoInsercao.executeUpdate();
+            int rowsAffected = comandoInsercao.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new SQLException("Falha ao inserir o cliente, nenhuma linha foi afetada.");
+            }
+            try (ResultSet generatedKeys = comandoInsercao.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    problema.setIdProblemas(generatedKeys.getLong(1));
+                } else {
+                    throw new SQLException("Falha ao obter o ID gerado para o cliente.");
+                }
+            }
+
+            System.out.println("Problema ok");
 
             System.out.println("Problema existente inserido com sucesso!");
         } catch (SQLException e) {
