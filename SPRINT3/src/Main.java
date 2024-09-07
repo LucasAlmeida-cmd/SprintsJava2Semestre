@@ -1,3 +1,4 @@
+import quantumleap.banco.*;
 import quantumleap.dominio.*;
 
 import java.sql.SQLOutput;
@@ -11,14 +12,37 @@ public class Main {
     public static void main(String[] args) throws ParseException {
         Scanner sc = new Scanner(System.in);
 
+        AgendamentoDAO agendamentoDAO = new AgendamentoDAO();
+        ClienteDAO clienteDAO = new ClienteDAO();
+        DiagnosticoDAO diagnosticoDAO = new DiagnosticoDAO();
+        GuinchoDAO guinchoDAO = new GuinchoDAO();
+        OficinaDAO oficinaDAO = new OficinaDAO();
+        PecaDAO pecaDAO = new PecaDAO();
+        ProblemasExistentesDAO problemasExistentesDAO = new ProblemasExistentesDAO();
+        VeiculoDAO veiculoDAO = new VeiculoDAO();
+
+
+
+
         Guincho guincho1 = new Guincho("123", 250, 100000);
         Peca peca = new Peca("vira", 500.00, "Cotinental", "modelo1");
         Peca peca2 = new Peca("Vela", 250.00, "bosch", "modelo2");
-        ProblemasExistentes problema1 = new ProblemasExistentes("nome1", "descrição1", 500.00, 3, peca);
-        ProblemasExistentes problema2 = new ProblemasExistentes("nome2", "descrição2", 1000.00, 1, peca2);
+        pecaDAO.adicionaPeca(peca);
+        pecaDAO.adicionaPeca(peca2);
+
+        Long idPecaExistente = 1L;
+        Peca pecaExistente = pecaDAO.buscarPecaPorId(idPecaExistente);
+        Long idPecaExistente2 = 2L;
+        Peca pecaExistente2 = pecaDAO.buscarPecaPorId(idPecaExistente2);
+
+
+        ProblemasExistentes problema1 = new ProblemasExistentes("nome1", "descrição1", 500.00, 3, pecaExistente);
+        ProblemasExistentes problema2 = new ProblemasExistentes("nome2", "descrição2", 1000.00, 1, pecaExistente2);
         ArrayList<ProblemasExistentes> problemas = new ArrayList<ProblemasExistentes>();
         problemas.add(problema1);
         problemas.add(problema2);
+
+
 
         Veiculo veiculo = new Veiculo("Fiat", "Palio", DateUtil.parseYear("2005"), 100000.00, "EFG4H56");
         Cliente cliente = new Cliente("Arthur", "Arthur@gmail.com", "111111111", "senha", true, "Rio Paulo");
@@ -26,9 +50,10 @@ public class Main {
         Agendamento ag1 = new Agendamento(diag1, "12/12/2024", "12:30");
 
         Veiculo veiculo2 = new Veiculo("Fiat", "Palio", DateUtil.parseYear("2005"), 100000.00, "ABC1D23");
-        Cliente cliente2 = new Cliente("Arthur", "Arthur@gmail.com", "111111111", "senha", false, "São Paulo");
+        Cliente cliente2 = new Cliente("Lucas", "Lucas@gmail.com", "111111111", "senha", false, "São Paulo");
         Diagnostico diag2 = new Diagnostico(cliente2, veiculo, problema2, guincho1);
         Agendamento ag2 = new Agendamento(diag2, "13/12/2024", "12:30");
+
 
         ArrayList<Agendamento> agendamentos = new ArrayList<Agendamento>();
         agendamentos.add(ag1);
@@ -38,8 +63,27 @@ public class Main {
         Oficina oficina2 = new Oficina("oficina", "Rio de janeiro", "11111111111", "oficina@gmail.com", agendamentos);
         ArrayList<Oficina> listaOficina = new ArrayList<>();
 
+        oficinaDAO.adicionarOficina(oficina1);
+        oficinaDAO.adicionarOficina(oficina2);
+
         listaOficina.add(oficina1);
         listaOficina.add(oficina2);
+
+        guinchoDAO.adicionaGuincho(guincho1);
+        pecaDAO.adicionaPeca(peca);
+        pecaDAO.adicionaPeca(peca2);
+        problemasExistentesDAO.adicionarProblemaExistente(problema1);
+        problemasExistentesDAO.adicionarProblemaExistente(problema2);
+
+        clienteDAO.adicionarCliente(cliente);
+        veiculoDAO.adicionarVeiculo(cliente, veiculo);
+        diagnosticoDAO.adicionarDiagnostico(diag1);
+        agendamentoDAO.adicionarAgendamento(1L, ag1);
+
+        clienteDAO.adicionarCliente(cliente2);
+        veiculoDAO.adicionarVeiculo(cliente2, veiculo2);
+        diagnosticoDAO.adicionarDiagnostico(diag2);
+        agendamentoDAO.adicionarAgendamento(1L, ag2);
 
 
         System.out.println("Bem vindo(a) ao Canal Porto Seguro!!!");
@@ -62,9 +106,10 @@ public class Main {
         }
 
         Cliente cliente3 = new Cliente(nomeCliente, emailCliente, telefoneCliente, senhaCliente, clientePorto, cidadeCliente);
+        clienteDAO.adicionarCliente(cliente3);
 
 
-
+        ArrayList<Veiculo> listaVeiculoCliente3 = new ArrayList<>();
         System.out.println("Insira a marca do seu veículo: ");
         String montadoraVeiculo = sc.nextLine();
         System.out.println("Insira o modelo do seu veículo: ");
@@ -84,7 +129,11 @@ public class Main {
         System.out.println("Insira a placa do veículo");
         String placaVeiculo = sc.nextLine();
 
+
+
         Veiculo veiculo3 = new Veiculo(montadoraVeiculo, modeloVeiculo, anoVeiculo, quantidadeQuilometros, placaVeiculo);
+
+        veiculoDAO.adicionarVeiculo(cliente3, veiculo3);
 
         System.out.println("A partir da lista de problemas, escreva o nome de qual melhor se encaixa no seu.");
         for (ProblemasExistentes problemasLista : problemas) {
@@ -105,6 +154,8 @@ public class Main {
 
 
         Diagnostico diag3 = new Diagnostico(cliente3, veiculo3, problema4, guincho1);
+        diagnosticoDAO.adicionarDiagnostico(diag3);
+
         System.out.println("Você precisa de um Guincho ? (sim ou não)");
         String verificaGuincho = sc.nextLine();
         if (verificaGuincho.equalsIgnoreCase("sim")){
@@ -133,6 +184,7 @@ public class Main {
 
 
         Agendamento ag3 = new Agendamento(diag3, data, hora);
+        agendamentoDAO.adicionarAgendamento(1L, ag3);
 
         for(Oficina oficinas : listaOficina){
             if(oficinas.getLocalizacaoOficina().equalsIgnoreCase(cliente3.getLocalizacaoCliente())){

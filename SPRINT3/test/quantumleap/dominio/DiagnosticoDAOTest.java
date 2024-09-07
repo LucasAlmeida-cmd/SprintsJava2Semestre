@@ -17,13 +17,10 @@ public class DiagnosticoDAOTest {
         ClienteDAO clienteDAO = new ClienteDAO();
         clienteDAO.adicionarCliente(cliente);
 
-        ArrayList<Veiculo> veiculos = new ArrayList<>();
+
         VeiculoDAO veiculoDAO = new VeiculoDAO();
         Veiculo ve1 = new Veiculo("vw", "123", DateUtil.parseYear("2002"), 123, "1233");
-        Veiculo ve2 = new Veiculo("teste", "123", DateUtil.parseYear("2003"), 123, "1233");
-        veiculos.add(ve1);
-        veiculos.add(ve2);
-        veiculoDAO.adicionarVeiculo(cliente, veiculos);
+        veiculoDAO.adicionarVeiculo(cliente, ve1);
 
         Peca peca = new Peca("Peça", 100, "teste", "teste");
 
@@ -59,13 +56,10 @@ public class DiagnosticoDAOTest {
         ClienteDAO clienteDAO = new ClienteDAO();
         clienteDAO.adicionarCliente(cliente);
 
-        ArrayList<Veiculo> veiculos = new ArrayList<>();
+
         VeiculoDAO veiculoDAO = new VeiculoDAO();
         Veiculo ve1 = new Veiculo("NOVODIAG", "123", DateUtil.parseYear("2002"), 123, "1233");
-        Veiculo ve2 = new Veiculo("NOVODIAG", "123", DateUtil.parseYear("2003"), 123, "1233");
-        veiculos.add(ve1);
-        veiculos.add(ve2);
-        veiculoDAO.adicionarVeiculo(cliente, veiculos);
+        veiculoDAO.adicionarVeiculo(cliente, ve1);
 
         Peca peca = new Peca("NOVODIAG", 100, "teste", "teste");
 

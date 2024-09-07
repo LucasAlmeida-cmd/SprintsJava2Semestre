@@ -15,19 +15,23 @@ public class DiagnosticoDAO {
         this.conexao = new ConnectionFactory().getConnection();
     }
 
-
-
     public void adicionarDiagnostico(Diagnostico diagnostico) {
+        String sql = "INSERT INTO tb_qfx_diagnostico (id_cliente, id_veiculo, id_problema, id_guincho) VALUES (?, ?, ?, ?)";
         try {
-            String sql = "INSERT INTO tb_qfx_diagnostico (id_cliente, id_veiculo, id_problema, id_guincho) VALUES (?, ?, ?, ?)";
-            PreparedStatement pstmt = conexao.prepareStatement(sql);
+            PreparedStatement pstmt = conexao.prepareStatement(sql, new String[] {"id_diagnostico"});
             pstmt.setLong(1, diagnostico.getCliente().getIdCliente());
             pstmt.setLong(2, diagnostico.getVeiculo().getIdVeiculo());
             pstmt.setLong(3, diagnostico.getProblemasExistentes().getIdProblemas());
             pstmt.setLong(4, diagnostico.getGuincho().getIdGuincho());
-
             pstmt.executeUpdate();
-            System.out.println("Diagnóstico inserido com sucesso!");
+
+            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    diagnostico.setIdDiagnostico(generatedKeys.getLong(1));
+                } else {
+                    throw new SQLException();
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -63,13 +67,7 @@ public class DiagnosticoDAO {
             pstmt.setLong(3, novoDiagnostico.getProblemasExistentes().getIdProblemas());
             pstmt.setLong(4, novoDiagnostico.getGuincho().getIdGuincho());
             pstmt.setLong(5, idDiagnostico);
-            int rowsAffected = pstmt.executeUpdate();
-
-            if (rowsAffected > 0) {
-                System.out.println("Diagnóstico atualizado com sucesso!");
-            } else {
-                System.out.println("Nenhum diagnóstico encontrado com o ID fornecido.");
-            }
+            pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -83,7 +81,6 @@ public class DiagnosticoDAO {
             pstmt.setLong(1, idDiagnostico);
 
             pstmt.executeUpdate();
-            System.out.println("Diagnóstico deletado com sucesso!");
         } catch (SQLException e) {
             e.printStackTrace();
         }

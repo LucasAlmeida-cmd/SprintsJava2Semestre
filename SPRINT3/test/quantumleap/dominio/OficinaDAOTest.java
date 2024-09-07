@@ -19,11 +19,8 @@ public class OficinaDAOTest {
 
         OficinaDAO oficinaDAO = new OficinaDAO();
         oficinaDAO.adicionarOficina(oficina1);
+        oficinaDAO.adicionarOficina(oficina2);
     }
-
-
-
-
 
     @Test
     public void adicionandoAgendamentoNaOficina() throws ParseException {
@@ -64,6 +61,58 @@ public class OficinaDAOTest {
         oficinaDAO.buscarOficinaPorId(1L);
     }
 
+    @Test
+    public void atualizandoOficina(){
+
+        ArrayList<Agendamento> lista2 = new ArrayList<>();
+        Oficina oficina1 = new Oficina("Oficina111", "Rua Carmina Pasqui","123", "email@teste.com", lista2);
+        OficinaDAO oficinaDAO = new OficinaDAO();
+        oficinaDAO.atualizarOficina(1L, oficina1);
+    }
+
+    @Test
+    public void buscandoAgendamentosPorOficina() {
+        OficinaDAO dao = new OficinaDAO();
+        Oficina oficina = dao.buscarOficinaPorId(1L);
+
+        if (oficina != null) {
+            System.out.println("Nome da Oficina: " + oficina.getNomeOficina());
+            System.out.println("Localização: " + oficina.getLocalizacaoOficina());
+            System.out.println("Telefone: " + oficina.getTelefoneOficina());
+            System.out.println("Email: " + oficina.getEmailOficina());
+            System.out.println("Agendamentos:");
+
+            for (Agendamento agendamento : oficina.getAgendamentos()) {
+                System.out.println("- Data: " + agendamento.getData());
+                System.out.println("  Hora: " + agendamento.getHora());
+                System.out.println("  Descrição do Diagnóstico: " + agendamento.getDiagnostico().getDescricao());
+                System.out.println();
+            }
+        } else {
+            System.out.println("Oficina não encontrada.");
+        }
+    }
+
+    @Test
+    public void listarOficinas() {
+        OficinaDAO dao = new OficinaDAO();
+
+        ArrayList<Oficina> oficinas = (ArrayList<Oficina>) dao.listarOficinas();
+
+        for (Oficina oficina : oficinas) {
+            System.out.println("Nome: " + oficina.getNomeOficina());
+            System.out.println("Localização: " + oficina.getLocalizacaoOficina());
+            System.out.println("Telefone: " + oficina.getTelefoneOficina());
+            System.out.println("Email: " + oficina.getEmailOficina());
+            System.out.println("--------------");
+        }
+    }
+
+    @Test
+    public void excluirOficina(){
+        OficinaDAO dao = new OficinaDAO();
+        dao.excluirOficina(2L);
+    }
 
 
 

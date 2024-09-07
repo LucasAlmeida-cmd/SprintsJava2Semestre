@@ -1,13 +1,13 @@
 package quantumleap.dominio;
 
-import java.sql.ResultSet;
-
 public class Agendamento {
+    private long idAgendamento;
     private Diagnostico diagnostico;
     private String data;
     private String hora;
     private String localizacao;
     private Oficina oficina;
+
 
     public Agendamento(Diagnostico diagnostico, String data, String hora) {
         this.diagnostico = diagnostico;
@@ -15,9 +15,29 @@ public class Agendamento {
         this.hora = hora;
     }
 
+    public Agendamento(){}
+
+    public long getIdAgendamento() {
+        return idAgendamento;
+    }
+
+    public long getIdOficina(){
+        return oficina.getIdOficina();
+    }
+
+    public void setIdAgendamento(long idAgendamento) {
+        this.idAgendamento = idAgendamento;
+    }
+
+    public Oficina getOficina() {
+        return oficina;
+    }
+
+    public void setOficina(Oficina oficina) {
+        this.oficina = oficina;
+    }
 
 
-    public String getDescricao(){return diagnostico.getDescricao();}
     public String getData() {
         return data;
     }
@@ -38,6 +58,8 @@ public class Agendamento {
         return diagnostico;
     }
 
+
+
     public void setDiagnostico(Diagnostico diagnostico) {
         this.diagnostico = diagnostico;
     }
@@ -49,6 +71,7 @@ public class Agendamento {
     public void setHora(String hora) {
         this.hora = hora;
     }
+
 
 
 }

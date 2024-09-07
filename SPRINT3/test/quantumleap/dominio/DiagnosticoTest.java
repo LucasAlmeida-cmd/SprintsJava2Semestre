@@ -36,4 +36,6 @@ public class DiagnosticoTest {
         Assertions.assertEquals(2000, resultado);
     }
 
+
+
 }

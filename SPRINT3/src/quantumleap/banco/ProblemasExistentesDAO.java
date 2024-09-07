@@ -60,7 +60,7 @@ public class ProblemasExistentesDAO {
                         rs.getString("descricao_problema"),
                         rs.getDouble("custo_mao_de_obra_problema"),
                         rs.getInt("qtd_peca"),
-                        new Peca() // Deve ser substituído pela lógica real para buscar a peça associada
+                        new Peca()
                 );
                 problema.setIdProblemas(rs.getLong("id_problema"));
             }

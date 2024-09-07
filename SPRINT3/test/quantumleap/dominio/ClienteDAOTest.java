@@ -15,7 +15,7 @@ public class ClienteDAOTest {
     }
 
     @Test
-    public void buscandoClientePorId() {
+    public void buscandoClienteP1orId() {
         ClienteDAO clienteDAO = new ClienteDAO();
         Long idCliente = 1L;
         Cliente cliente = clienteDAO.buscarClientePorId(idCliente);

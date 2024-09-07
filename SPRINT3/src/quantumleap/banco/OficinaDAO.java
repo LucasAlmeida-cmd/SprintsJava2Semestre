@@ -24,14 +24,24 @@ public class OficinaDAO {
     public void adicionarOficina(Oficina oficina) {
         try {
             String sqlInsert = "INSERT INTO tb_qfx_oficina (nome_oficina, localizacao_oficina, telefone_oficina, email_oficina) VALUES (?, ?, ?, ?)";
-            PreparedStatement comandoInsercao = conexao.prepareStatement(sqlInsert);
+            PreparedStatement comandoInsercao = conexao.prepareStatement(sqlInsert, new String[] {"id_oficina"});
 
             comandoInsercao.setString(1, oficina.getNomeOficina());
             comandoInsercao.setString(2, oficina.getLocalizacaoOficina());
             comandoInsercao.setString(3, oficina.getTelefoneOficina());
             comandoInsercao.setString(4, oficina.getEmailOficina());
 
-            comandoInsercao.execute();
+            int rowsAffected = comandoInsercao.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new SQLException("Falha ao inserir o cliente, nenhuma linha foi afetada.");
+            }
+            try (ResultSet generatedKeys = comandoInsercao.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    oficina.setIdOficina(generatedKeys.getLong(1));
+                } else {
+                    throw new SQLException("Falha ao obter o ID gerado para o cliente.");
+                }
+            }
             System.out.println("Oficina inserida com sucesso!");
 
         } catch (SQLException e) {
@@ -41,80 +51,78 @@ public class OficinaDAO {
 
     public Oficina buscarOficinaPorId(Long idOficina) {
         Oficina oficina = null;
+
         try {
-            String sqlSelect = "SELECT nome_oficina, localizacao_oficina, telefone_oficina, email_oficina FROM tb_qfx_oficina WHERE id_oficina = ?";
-            PreparedStatement comandoSelecao = conexao.prepareStatement(sqlSelect);
-            comandoSelecao.setLong(1, idOficina);
+            // Primeiro, busca os detalhes da oficina
+            String sqlOficina = "SELECT nome_oficina, localizacao_oficina, telefone_oficina, email_oficina FROM tb_qfx_oficina WHERE id_oficina = ?";
+            PreparedStatement pstmtOficina = conexao.prepareStatement(sqlOficina);
+            pstmtOficina.setLong(1, idOficina);
+            ResultSet rsOficina = pstmtOficina.executeQuery();
 
-            ResultSet rs = comandoSelecao.executeQuery();
-            if (rs.next()) {
-                ArrayList<Agendamento> agendamentos = (ArrayList<Agendamento>) buscarAgendamentosPorOficina(idOficina);
-
+            if (rsOficina.next()) {
                 oficina = new Oficina(
-                        rs.getString("nome_oficina"),
-                        rs.getString("localizacao_oficina"),
-                        rs.getString("telefone_oficina"),
-                        rs.getString("email_oficina"),
-                        agendamentos
+                        rsOficina.getString("nome_oficina"),
+                        rsOficina.getString("localizacao_oficina"),
+                        rsOficina.getString("telefone_oficina"),
+                        rsOficina.getString("email_oficina"),
+                        new ArrayList<>()
                 );
+
+                // Agora, busca os agendamentos relacionados a essa oficina
+                String sqlAgendamentos = "SELECT data_agendamento, hora_agendamento, descricao_agendamento FROM tb_qfx_agendamento WHERE id_oficina = ?";
+                PreparedStatement pstmtAgendamentos = conexao.prepareStatement(sqlAgendamentos);
+                pstmtAgendamentos.setLong(1, idOficina);
+                ResultSet rsAgendamentos = pstmtAgendamentos.executeQuery();
+
+                while (rsAgendamentos.next()) {
+                    Diagnostico diagnostico = new Diagnostico();
+                    diagnostico.setDescricao(rsAgendamentos.getString("descricao_agendamento"));
+
+                    Agendamento agendamento = new Agendamento(
+                            diagnostico,
+                            rsAgendamentos.getString("data_agendamento"),
+                            rsAgendamentos.getString("hora_agendamento")
+                    );
+
+                    oficina.getAgendamentos().add(agendamento);
+                }
+
+                rsAgendamentos.close();
             }
-            rs.close();
+
+            rsOficina.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+
         return oficina;
     }
 
-    public List<Agendamento> buscarAgendamentosPorOficina(Long idOficina) {
-        List<Agendamento> agendamentos = new ArrayList<>();
+
+
+    public List<Oficina> listarOficinas() {
+        List<Oficina> oficinas = new ArrayList<>();
         try {
-            String sqlSelect = "SELECT id_agendamento, id_diagnostico, data_agendamento, hora_agendamento FROM tb_qfx_agendamento WHERE id_oficina = ?";
-            PreparedStatement comandoSelecao = conexao.prepareStatement(sqlSelect);
-            comandoSelecao.setLong(1, idOficina);
+            String sqlSelectAll = "SELECT nome_oficina, localizacao_oficina, telefone_oficina, email_oficina FROM tb_qfx_oficina";
+            PreparedStatement comandoSelecao = conexao.prepareStatement(sqlSelectAll);
 
             ResultSet rs = comandoSelecao.executeQuery();
             while (rs.next()) {
-                Long idDiagnostico = rs.getLong("id_diagnostico");
-                Diagnostico diagnostico = new DiagnosticoDAO().buscarDiagnosticoPorId(idDiagnostico);
-
-                Agendamento agendamento = new Agendamento(
-                        diagnostico,
-                        rs.getString("data_agendamento"),
-                        rs.getString("hora_agendamento")
+                Oficina oficina = new Oficina(
+                        rs.getString("nome_oficina"),
+                        rs.getString("localizacao_oficina"),
+                        rs.getString("telefone_oficina"),
+                        rs.getString("email_oficina")
                 );
-                agendamentos.add(agendamento);
+                oficinas.add(oficina);
             }
             rs.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return agendamentos;
+        return oficinas;
     }
 
-
-
-//    public List<Oficina> listarOficinas() {
-//        List<Oficina> oficinas = new ArrayList<>();
-//        try {
-//            String sqlSelectAll = "SELECT id_oficina, nome_oficina, localizacao_oficina, telefone_oficina, email_oficina FROM tb_qfx_oficina";
-//            PreparedStatement comandoSelecao = conexao.prepareStatement(sqlSelectAll);
-//
-//            ResultSet rs = comandoSelecao.executeQuery();
-//            while (rs.next()) {
-//                Oficina oficina = new Oficina(
-//                        rs.getString("nome_oficina"),
-//                        rs.getString("localizacao_oficina"),
-//                        rs.getString("telefone_oficina"),
-//                        rs.getString("email_oficina")
-//                );
-//                oficinas.add(oficina);
-//            }
-//            rs.close();
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return oficinas;
-//    }
 
     public void atualizarOficina(Long idOficina, Oficina oficina) {
         try {
@@ -157,7 +165,7 @@ public class OficinaDAO {
                 pstmt.setLong(1, idOficina);
                 pstmt.setString(2, agendamento.getData());
                 pstmt.setString(3, agendamento.getHora());
-                pstmt.setString(4, agendamento.getDescricao());
+                pstmt.setString(4, agendamento.getDiagnostico().getDescricao());
                 pstmt.addBatch();
             }
 

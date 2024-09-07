@@ -16,41 +16,27 @@ public class VeiculoDAO {
     }
 
 
-    public void adicionarVeiculo(Cliente cliente, ArrayList<Veiculo> veiculos) {
+    public void adicionarVeiculo(Cliente cliente, Veiculo veiculo) {
         String sql = "INSERT INTO tb_qfx_veiculo (id_cliente, montadora_veiculo, modelo_veiculo, ano_veiculo, quantidade_quilometros, placa_veiculo) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = conexao.prepareStatement(sql, new String[] {"id_veiculo"})) {
 
-            // Adicionar veículos ao lote
-            for (Veiculo veiculo : veiculos) {
-                pstmt.setLong(1, cliente.getIdCliente());
-                pstmt.setString(2, veiculo.getMontadoraVeiculo());
-                pstmt.setString(3, veiculo.getModeloVeiculo());
-                pstmt.setDate(4, new java.sql.Date(veiculo.getAnoVeiculo().getTime()));
-                pstmt.setDouble(5, veiculo.getQuantidadeQuilometros());
-                pstmt.setString(6, veiculo.getPlacaVeiculo());
-                pstmt.addBatch();
-            }
+            pstmt.setLong(1, cliente.getIdCliente());
+            pstmt.setString(2, veiculo.getMontadoraVeiculo());
+            pstmt.setString(3, veiculo.getModeloVeiculo());
+            pstmt.setDate(4, new java.sql.Date(veiculo.getAnoVeiculo().getTime()));
+            pstmt.setDouble(5, veiculo.getQuantidadeQuilometros());
+            pstmt.setString(6, veiculo.getPlacaVeiculo());
+            pstmt.executeUpdate();
 
-            // Executar o lote e obter IDs gerados
-            int[] affectedRows = pstmt.executeBatch();
             try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
-                int i = 0;
-                while (generatedKeys.next()) {
-                    if (i < veiculos.size()) {
-                        veiculos.get(i).setIdVeiculo(generatedKeys.getLong(1));
-                        i++;
-                    }
+                if (generatedKeys.next()) {
+                    veiculo.setIdVeiculo(generatedKeys.getLong(1));
+                } else {
+                    throw new SQLException("Falha ao obter o ID gerado para o veículo.");
                 }
             }
 
-            // Verificar se todas as inserções foram bem-sucedidas
-            for (int affectedRow : affectedRows) {
-                if (affectedRow == Statement.EXECUTE_FAILED) {
-                    throw new SQLException("Falha ao inserir um ou mais veículos.");
-                }
-            }
-
-            System.out.println("Veículos inseridos com sucesso!");
+            System.out.println("Veículo inserido com sucesso!");
 
         } catch (SQLException e) {
             throw new RuntimeException(e);

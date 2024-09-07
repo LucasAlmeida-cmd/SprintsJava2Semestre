@@ -11,14 +11,9 @@ public class VeiculoDAOTest{
 
     @Test
     public void testAdicionarVeiculo() throws ParseException {
-        ArrayList<Veiculo> veiculos = new ArrayList<>();
         VeiculoDAO veiculoDAO = new VeiculoDAO();
 
         Veiculo ve1 = new Veiculo("vw", "123", DateUtil.parseYear("2002"), 123, "1233");
-        Veiculo ve2 = new Veiculo("teste", "123", DateUtil.parseYear("2003"), 123, "1233");
-        veiculos.add(ve1);
-        veiculos.add(ve2);
-
 
         long idCliente = 1;
 
@@ -28,7 +23,7 @@ public class VeiculoDAOTest{
         if (cliente == null){
             System.out.println("Usuario nao encontrado");
         } else {
-            veiculoDAO.adicionarVeiculo(cliente, veiculos);
+            veiculoDAO.adicionarVeiculo(cliente, ve1);
         }
     }
 

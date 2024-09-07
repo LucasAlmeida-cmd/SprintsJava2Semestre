@@ -7,6 +7,7 @@ public class Diagnostico {
     private ProblemasExistentes problemasExistentes;
     private double orcamento;
     private Guincho guincho;
+    private String descricao;
 
     public Diagnostico(Cliente cliente, Veiculo veiculo, ProblemasExistentes problemasExistentes, Guincho guincho) {
         this.cliente = cliente;
@@ -19,6 +20,8 @@ public class Diagnostico {
         }
 
     }
+
+    public Diagnostico(){}
 
     public Cliente getCliente() {
         return cliente;
@@ -56,7 +59,16 @@ public class Diagnostico {
         return orcamento;
     }
 
-    public String getDescricao(){ return problemasExistentes.getDescricaoProblema();}
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public String getDescricao() {
+        return descricao != null ? descricao : (problemasExistentes != null ? problemasExistentes.getDescricaoProblema() : "Descrição não disponível");
+    }
+
+
 
     public double adicionandoGuincho(){
         return orcamento + guincho.getPreco() + problemasExistentes.getCustoMaoDeObraProblema() + problemasExistentes.getQtdPeca()  * 500;
@@ -77,4 +89,8 @@ public class Diagnostico {
     public void setIdDiagnostico(long idDiagnostico) {
         this.idDiagnostico = idDiagnostico;
     }
+
+
+
+
 }
