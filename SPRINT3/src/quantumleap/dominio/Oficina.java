@@ -8,42 +8,24 @@ public class Oficina {
     private String localizacaoOficina;
     private String telefoneOficina;
     private String emailOficina;
-    private ArrayList<Agendamento> agendamentos;
-
-
-    public Oficina(String nomeOficina, String localizacaoOficina, String telefoneOficina, String emailOficina, ArrayList<Agendamento> agendamentos) {
-        this.nomeOficina = nomeOficina;
-        this.localizacaoOficina = localizacaoOficina;
-        this.telefoneOficina = telefoneOficina;
-        this.emailOficina = emailOficina;
-        this.agendamentos = agendamentos;
-    }
 
     public Oficina(String nomeOficina, String localizacaoOficina, String telefoneOficina, String emailOficina) {
         this.nomeOficina = nomeOficina;
         this.localizacaoOficina = localizacaoOficina;
         this.telefoneOficina = telefoneOficina;
         this.emailOficina = emailOficina;
-        this.agendamentos = new ArrayList<>();
+
     }
 
     public void setIdOficina(long idOficina) {
         this.idOficina = idOficina;
     }
+
     public long getIdOficina() {
         return idOficina;
     }
 
 
-
-    public boolean verificaAgendamento(Agendamento novoAgendamento) {
-        for (Agendamento agendamento : agendamentos) {
-            if (agendamento.getData().equals(novoAgendamento.getData()) && agendamento.getHora().equals(novoAgendamento.getHora()))
-                throw new IllegalArgumentException("Data e Hora já existentes");
-
-        }
-        return true;
-    }
 
     public String getNomeOficina() {
         return nomeOficina;
@@ -71,14 +53,6 @@ public class Oficina {
 
     public void setEmailOficina(String emailOficina) {
         this.emailOficina = emailOficina;
-    }
-
-    public ArrayList<Agendamento> getAgendamentos() {
-        return agendamentos;
-    }
-
-    public void setAgendamentos(ArrayList<Agendamento> agendamentos) {
-        this.agendamentos = agendamentos;
     }
 
     public String getLocalizacaoOficina() {

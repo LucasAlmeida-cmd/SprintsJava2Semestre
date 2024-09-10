@@ -1,5 +1,9 @@
 package quantumleap.dominio;
 
+import quantumleap.banco.AgendamentoDAO;
+
+import java.util.ArrayList;
+
 public class Agendamento {
     private long idAgendamento;
     private Diagnostico diagnostico;
@@ -9,24 +13,11 @@ public class Agendamento {
     private Oficina oficina;
 
 
-    public Agendamento(Diagnostico diagnostico, String data, String hora) {
+    public Agendamento(Diagnostico diagnostico, String data, String hora, Oficina oficina) {
         this.diagnostico = diagnostico;
         this.data = data;
         this.hora = hora;
-    }
-
-    public Agendamento(){}
-
-    public long getIdAgendamento() {
-        return idAgendamento;
-    }
-
-    public long getIdOficina(){
-        return oficina.getIdOficina();
-    }
-
-    public void setIdAgendamento(long idAgendamento) {
-        this.idAgendamento = idAgendamento;
+        this.oficina = oficina;
     }
 
     public Oficina getOficina() {
@@ -37,6 +28,38 @@ public class Agendamento {
         this.oficina = oficina;
     }
 
+
+    public boolean verificaAgendamento() {
+        AgendamentoDAO agendamentoDAO = new AgendamentoDAO();
+        ArrayList<Agendamento> agenda = agendamentoDAO.listarAgendamentos();
+        for (Agendamento agendamento : agenda) {
+            if (agendamento.getData().equals(this.getData()) && agendamento.getHora().equals(this.getHora())) {
+                throw new IllegalArgumentException("Data e Hora já existentes");
+            }
+        }
+        return true;
+    }
+
+
+
+//    public boolean verificaAgendamento(Agendamento novoAgendamento) {
+//        AgendamentoDAO agendamentoDAO = new AgendamentoDAO();
+//        ArrayList<Agendamento> agenda = agendamentoDAO.listarAgendamentos();
+//        for (Agendamento agendamento : agenda) {
+//            if (agendamento.getData().equals(novoAgendamento.getData()) && agendamento.getHora().equals(novoAgendamento.getHora()))
+//                throw new IllegalArgumentException("Data e Hora já existentes");
+//        }
+//        return true;
+//    }
+
+
+    public long getIdAgendamento() {
+        return idAgendamento;
+    }
+
+    public void setIdAgendamento(long idAgendamento) {
+        this.idAgendamento = idAgendamento;
+    }
 
     public String getData() {
         return data;
@@ -58,8 +81,6 @@ public class Agendamento {
         return diagnostico;
     }
 
-
-
     public void setDiagnostico(Diagnostico diagnostico) {
         this.diagnostico = diagnostico;
     }
@@ -73,5 +94,7 @@ public class Agendamento {
     }
 
 
-
+    public void setIdCliente(long idAgendamento) {
+        this.idAgendamento = idAgendamento;
+    }
 }

@@ -72,13 +72,21 @@ public class Cliente {
         this.telefoneCliente = telefoneCliente;
     }
 
-    public boolean isClientePorto() {
+
+
+
+    public boolean getClientePorto() {
         return clientePorto;
     }
 
     public void setClientePorto(boolean clientePorto) {
         this.clientePorto = clientePorto;
     }
+
+
+
+
+
 
     public String getSenhaCliente() {
         return senhaCliente;
@@ -112,7 +120,5 @@ public class Cliente {
         this.idCliente = idCliente;
     }
 
-    public boolean getClientePorto() {
-        return clientePorto;
-    }
+
 }

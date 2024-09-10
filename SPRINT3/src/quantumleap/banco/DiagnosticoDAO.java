@@ -11,14 +11,16 @@ import java.util.ArrayList;
 public class DiagnosticoDAO {
 
     private Connection conexao;
-    public DiagnosticoDAO(){
+
+    public DiagnosticoDAO() {
+
         this.conexao = new ConnectionFactory().getConnection();
+
     }
 
     public void adicionarDiagnostico(Diagnostico diagnostico) {
         String sql = "INSERT INTO tb_qfx_diagnostico (id_cliente, id_veiculo, id_problema, id_guincho) VALUES (?, ?, ?, ?)";
-        try {
-            PreparedStatement pstmt = conexao.prepareStatement(sql, new String[] {"id_diagnostico"});
+        try (PreparedStatement pstmt = conexao.prepareStatement(sql, new String[] {"id_diagnostico"})) {
             pstmt.setLong(1, diagnostico.getCliente().getIdCliente());
             pstmt.setLong(2, diagnostico.getVeiculo().getIdVeiculo());
             pstmt.setLong(3, diagnostico.getProblemasExistentes().getIdProblemas());
@@ -29,7 +31,7 @@ public class DiagnosticoDAO {
                 if (generatedKeys.next()) {
                     diagnostico.setIdDiagnostico(generatedKeys.getLong(1));
                 } else {
-                    throw new SQLException();
+                    throw new SQLException("Falha ao obter o ID gerado.");
                 }
             }
         } catch (SQLException e) {
@@ -39,19 +41,19 @@ public class DiagnosticoDAO {
 
     public Diagnostico buscarDiagnosticoPorId(Long idDiagnostico) {
         Diagnostico diagnostico = null;
-        try {
-            String sql = "SELECT * FROM tb_qfx_diagnostico WHERE id_diagnostico = ?";
-            PreparedStatement pstmt = conexao.prepareStatement(sql);
+        String sql = "SELECT * FROM tb_qfx_diagnostico WHERE id_diagnostico = ?";
+        try (PreparedStatement pstmt = conexao.prepareStatement(sql)) {
             pstmt.setLong(1, idDiagnostico);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                Cliente cliente = new ClienteDAO().buscarClientePorId(rs.getLong("id_cliente"));
-                Veiculo veiculo = new VeiculoDAO().buscarVeiculoPorId(rs.getLong("id_veiculo"));
-                ProblemasExistentes problemasExistentes = new ProblemasExistentesDAO().buscarProblemasExistentesPorId(rs.getLong("id_problema"));
-                Guincho guincho = new GuinchoDAO().buscarGuinchoPorId(rs.getLong("id_guincho"));
-                diagnostico = new Diagnostico(cliente, veiculo, problemasExistentes, guincho);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    Cliente cliente = new ClienteDAO().buscarClientePorId(rs.getLong("id_cliente"));
+                    Veiculo veiculo = new VeiculoDAO().buscarVeiculoPorId(rs.getLong("id_veiculo"));
+                    ProblemasExistentes problemasExistentes = new ProblemasExistentesDAO().buscarProblemasExistentesPorId(rs.getLong("id_problema"));
+                    Guincho guincho = new GuinchoDAO().buscarGuinchoPorId(rs.getLong("id_guincho"));
+                    diagnostico = new Diagnostico(cliente, veiculo, problemasExistentes, guincho);
+                    diagnostico.setIdDiagnostico(idDiagnostico);
+                }
             }
-            rs.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -60,7 +62,6 @@ public class DiagnosticoDAO {
 
     public void atualizarDiagnostico(long idDiagnostico, Diagnostico novoDiagnostico) {
         String sql = "UPDATE tb_qfx_diagnostico SET id_cliente = ?, id_veiculo = ?, id_problema = ?, id_guincho = ? WHERE id_diagnostico = ?";
-
         try (PreparedStatement pstmt = conexao.prepareStatement(sql)) {
             pstmt.setLong(1, novoDiagnostico.getCliente().getIdCliente());
             pstmt.setLong(2, novoDiagnostico.getVeiculo().getIdVeiculo());
@@ -73,13 +74,10 @@ public class DiagnosticoDAO {
         }
     }
 
-
     public void deletarDiagnostico(Long idDiagnostico) {
-        try {
-            String sql = "DELETE FROM tb_qfx_diagnostico WHERE id_diagnostico = ?";
-            PreparedStatement pstmt = conexao.prepareStatement(sql);
+        String sql = "DELETE FROM tb_qfx_diagnostico WHERE id_diagnostico = ?";
+        try (PreparedStatement pstmt = conexao.prepareStatement(sql)) {
             pstmt.setLong(1, idDiagnostico);
-
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -111,5 +109,4 @@ public class DiagnosticoDAO {
         }
         return diagnosticos;
     }
-
 }

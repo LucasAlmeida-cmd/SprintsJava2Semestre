@@ -11,8 +11,10 @@ public class GuinchoDAOTest {
     @Test
     public void adicionandoGuincho(){
         Guincho guincho = new Guincho("AAAA", 1000, 100000);
+        Guincho guincho2 = new Guincho("AAAA", 1000, 100000);
         GuinchoDAO guinchoDAO = new GuinchoDAO();
         guinchoDAO.adicionaGuincho(guincho);
+        guinchoDAO.adicionaGuincho(guincho2);
     }
 
     @Test
@@ -35,12 +37,13 @@ public class GuinchoDAOTest {
     @Test
     public void atualizaGuincho(){
         GuinchoDAO guinchoDAO = new GuinchoDAO();
-        Guincho guincho = new Guincho("6", 10, 10);
-        long idGuincho = 4L;
+        Guincho guincho = new Guincho("new", 1, 1);
+        long idGuincho = 1L;
 
         if(guinchoDAO.buscarGuinchoPorId(idGuincho) == null){
             System.out.println("ID Guincho não encontrado.");
         } else {
+            System.out.println("Guincho atualizado.");
             guinchoDAO.atualizarGuincho(idGuincho, guincho);
         }
 
@@ -64,8 +67,15 @@ public class GuinchoDAOTest {
     @Test
     public void deletarGuincho(){
         GuinchoDAO guinchoDAO = new GuinchoDAO();
-        Long idGuincho = 1L;
-        guinchoDAO.deletarGuincho(idGuincho);
+        Long idGuincho = 2L;
+
+        Guincho guincho = guinchoDAO.buscarGuinchoPorId(idGuincho);
+        if(guincho == null){
+            System.out.println("Guincho não encontrado.");
+        }else{
+            System.out.println("Guincho deletado com sucesso.");
+            guinchoDAO.deletarGuincho(idGuincho);
+        }
     }
 
 

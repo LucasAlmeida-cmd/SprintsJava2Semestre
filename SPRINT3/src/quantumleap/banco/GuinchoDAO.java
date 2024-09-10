@@ -16,11 +16,9 @@ public class GuinchoDAO {
         this.conexao = new ConnectionFactory().getConnection();
     }
 
-
     public void adicionaGuincho(Guincho guincho) {
         String sqlInsert = "INSERT INTO tb_qfx_guincho (placa_guincho, preco_guincho, carga_maxima) VALUES (?, ?, ?)";
-        try {
-            PreparedStatement pstmt = conexao.prepareStatement(sqlInsert, new String[] {"id_guincho"});
+        try (PreparedStatement pstmt = conexao.prepareStatement(sqlInsert, new String[] {"id_guincho"})) {
             pstmt.setString(1, guincho.getPlaca());
             pstmt.setDouble(2, guincho.getPreco());
             pstmt.setDouble(3, guincho.getCargaMaxima());
@@ -30,10 +28,9 @@ public class GuinchoDAO {
                 if (generatedKeys.next()) {
                     guincho.setIdGuincho(generatedKeys.getLong(1));
                 } else {
-                    throw new SQLException();
+                    throw new SQLException("Falha ao obter o ID gerado.");
                 }
             }
-            pstmt.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -41,22 +38,19 @@ public class GuinchoDAO {
 
     public Guincho buscarGuinchoPorId(long guinchoId) {
         Guincho guincho = null;
-        try {
-            String sql = "SELECT placa_guincho, preco_guincho, carga_maxima FROM tb_qfx_guincho WHERE id_guincho = ?";
-            PreparedStatement pstmt = conexao.prepareStatement(sql);
+        String sql = "SELECT placa_guincho, preco_guincho, carga_maxima FROM tb_qfx_guincho WHERE id_guincho = ?";
+        try (PreparedStatement pstmt = conexao.prepareStatement(sql)) {
             pstmt.setLong(1, guinchoId);
-            ResultSet rs = pstmt.executeQuery();
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    String placa = rs.getString("placa_guincho");
+                    double preco = rs.getDouble("preco_guincho");
+                    double cargaMaxima = rs.getDouble("carga_maxima");
 
-            if (rs.next()) {
-                String placa = rs.getString("placa_guincho");
-                double preco = rs.getDouble("preco_guincho");
-                double cargaMaxima = rs.getDouble("carga_maxima");
-
-                guincho = new Guincho(placa, preco, cargaMaxima);
-                guincho.setIdGuincho(guinchoId);
+                    guincho = new Guincho(placa, preco, cargaMaxima);
+                    guincho.setIdGuincho(guinchoId);
+                }
             }
-            rs.close();
-            pstmt.close();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -64,29 +58,26 @@ public class GuinchoDAO {
     }
 
     public void atualizarGuincho(long idGuincho, Guincho guincho) {
-        try {
-            String sqlUpdate = "UPDATE tb_qfx_guincho SET placa_guincho = ?, preco_guincho = ?, carga_maxima = ? WHERE id_guincho = ?";
-            PreparedStatement comandoDeAtualizacao = conexao.prepareStatement(sqlUpdate);
-            comandoDeAtualizacao.setString(1, guincho.getPlaca());
-            comandoDeAtualizacao.setDouble(2, guincho.getPreco());
-            comandoDeAtualizacao.setDouble(3, guincho.getCargaMaxima());
-            comandoDeAtualizacao.setLong(4, idGuincho);
+        String sqlUpdate = "UPDATE tb_qfx_guincho SET placa_guincho = ?, preco_guincho = ?, carga_maxima = ? WHERE id_guincho = ?";
+        try (PreparedStatement pstmt = conexao.prepareStatement(sqlUpdate)) {
+            pstmt.setString(1, guincho.getPlaca());
+            pstmt.setDouble(2, guincho.getPreco());
+            pstmt.setDouble(3, guincho.getCargaMaxima());
+            pstmt.setLong(4, idGuincho);
 
-            comandoDeAtualizacao.executeUpdate();
-            comandoDeAtualizacao.close();
+            pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public ArrayList<Guincho> listarGuincho(){
+    public ArrayList<Guincho> listarGuincho() {
         ArrayList<Guincho> guinchos = new ArrayList<>();
-        try{
-            String sql = "SELECT * FROM tb_qfx_guincho";
-            PreparedStatement pstmt = conexao.prepareStatement(sql);
-            ResultSet rs = pstmt.executeQuery();
+        String sql = "SELECT * FROM tb_qfx_guincho";
+        try (PreparedStatement pstmt = conexao.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
 
-            while (rs.next()){
+            while (rs.next()) {
                 Guincho guincho = new Guincho();
                 guincho.setIdGuincho(rs.getLong("id_guincho"));
                 guincho.setPlaca(rs.getString("placa_guincho"));
@@ -94,7 +85,6 @@ public class GuinchoDAO {
                 guincho.setCargaMaxima(rs.getDouble("carga_maxima"));
                 guinchos.add(guincho);
             }
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -102,15 +92,23 @@ public class GuinchoDAO {
     }
 
     public void deletarGuincho(long guinchoId) {
-        try {
-            String sqlDelete = "DELETE FROM tb_qfx_guincho WHERE id_guincho = ?";
-            PreparedStatement comandoDeDelecao = conexao.prepareStatement(sqlDelete);
-            comandoDeDelecao.setLong(1, guinchoId);
-
-            comandoDeDelecao.executeUpdate();
-            comandoDeDelecao.close();
+        String sqlDelete = "DELETE FROM tb_qfx_guincho WHERE id_guincho = ?";
+        try (PreparedStatement pstmt = conexao.prepareStatement(sqlDelete)) {
+            pstmt.setLong(1, guinchoId);
+            pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+
+    public void fecharConexao() {
+        try {
+            if (conexao != null && !conexao.isClosed()) {
+                conexao.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }

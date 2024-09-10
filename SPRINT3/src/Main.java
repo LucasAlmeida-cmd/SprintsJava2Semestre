@@ -35,6 +35,7 @@ public class Main {
         Long idPecaExistente2 = 2L;
         Peca pecaExistente2 = pecaDAO.buscarPecaPorId(idPecaExistente2);
 
+        Oficina oficina = new Oficina("oficina", "São Paulo", "11111111111", "oficina@gmail.com");
 
         ProblemasExistentes problema1 = new ProblemasExistentes("nome1", "descrição1", 500.00, 3, pecaExistente);
         ProblemasExistentes problema2 = new ProblemasExistentes("nome2", "descrição2", 1000.00, 1, pecaExistente2);
@@ -47,27 +48,20 @@ public class Main {
         Veiculo veiculo = new Veiculo("Fiat", "Palio", DateUtil.parseYear("2005"), 100000.00, "EFG4H56");
         Cliente cliente = new Cliente("Arthur", "Arthur@gmail.com", "111111111", "senha", true, "Rio Paulo");
         Diagnostico diag1 = new Diagnostico(cliente, veiculo, problema1,guincho1);
-        Agendamento ag1 = new Agendamento(diag1, "12/12/2024", "12:30");
+        Agendamento ag1 = new Agendamento(diag1, "12/12/2024", "12:30", oficina);
 
         Veiculo veiculo2 = new Veiculo("Fiat", "Palio", DateUtil.parseYear("2005"), 100000.00, "ABC1D23");
         Cliente cliente2 = new Cliente("Lucas", "Lucas@gmail.com", "111111111", "senha", false, "São Paulo");
         Diagnostico diag2 = new Diagnostico(cliente2, veiculo, problema2, guincho1);
-        Agendamento ag2 = new Agendamento(diag2, "13/12/2024", "12:30");
+        Agendamento ag2 = new Agendamento(diag2, "13/12/2024", "12:30", oficina);
 
 
         ArrayList<Agendamento> agendamentos = new ArrayList<Agendamento>();
         agendamentos.add(ag1);
         agendamentos.add(ag2);
 
-        Oficina oficina1 = new Oficina("oficina", "São Paulo", "11111111111", "oficina@gmail.com", agendamentos);
-        Oficina oficina2 = new Oficina("oficina", "Rio de janeiro", "11111111111", "oficina@gmail.com", agendamentos);
-        ArrayList<Oficina> listaOficina = new ArrayList<>();
-
-        oficinaDAO.adicionarOficina(oficina1);
-        oficinaDAO.adicionarOficina(oficina2);
-
-        listaOficina.add(oficina1);
-        listaOficina.add(oficina2);
+        //Inserts
+        oficinaDAO.adicionarOficina(oficina);
 
         guinchoDAO.adicionaGuincho(guincho1);
         pecaDAO.adicionaPeca(peca);
@@ -78,14 +72,14 @@ public class Main {
         clienteDAO.adicionarCliente(cliente);
         veiculoDAO.adicionarVeiculo(cliente, veiculo);
         diagnosticoDAO.adicionarDiagnostico(diag1);
-        agendamentoDAO.adicionarAgendamento(1L, ag1);
+        agendamentoDAO.adicionarAgendamento(ag1);
 
         clienteDAO.adicionarCliente(cliente2);
         veiculoDAO.adicionarVeiculo(cliente2, veiculo2);
         diagnosticoDAO.adicionarDiagnostico(diag2);
-        agendamentoDAO.adicionarAgendamento(1L, ag2);
+        agendamentoDAO.adicionarAgendamento(ag2);
 
-
+        //
         System.out.println("Bem vindo(a) ao Canal Porto Seguro!!!");
         System.out.println("Por favor, inseira seu nome: ");
         String nomeCliente = sc.nextLine();
@@ -109,7 +103,6 @@ public class Main {
         clienteDAO.adicionarCliente(cliente3);
 
 
-        ArrayList<Veiculo> listaVeiculoCliente3 = new ArrayList<>();
         System.out.println("Insira a marca do seu veículo: ");
         String montadoraVeiculo = sc.nextLine();
         System.out.println("Insira o modelo do seu veículo: ");
@@ -183,20 +176,17 @@ public class Main {
 
 
 
-        Agendamento ag3 = new Agendamento(diag3, data, hora);
-        agendamentoDAO.adicionarAgendamento(1L, ag3);
-
-        for(Oficina oficinas : listaOficina){
-            if(oficinas.getLocalizacaoOficina().equalsIgnoreCase(cliente3.getLocalizacaoCliente())){
-                ag3.setLocalizacao(oficinas.getLocalizacaoOficina());
-            }
-        }
+        Agendamento ag3 = new Agendamento(diag3, data, hora, oficina);
+        agendamentoDAO.adicionarAgendamento(ag3);
 
         try {
-            oficina1.verificaAgendamento(ag3);
 
-            System.out.println("Olá senhor(a) " +cliente3.getNomeCliente() + ", seu veículo " + veiculo3.getModeloVeiculo() + " de placa " + veiculo3.getPlacaVeiculo() + " foi agendado. \nVocê deverá levar seu veículo no dia " +
-                    ag3.getData() + " às " + ag3.getHora() + ", o seu orçamento será R$" + diag3.getOrcamento() + "\nA oficia está localizada na cidade: "+ ag3.getLocalizacao()+". Muito obrigado por escolher a Porto Seguro!!");
+            //ag3.verificaAgendamento();
+            System.out.println("Olá senhor(a) " + cliente3.getNomeCliente() + ", seu veículo " + veiculo3.getModeloVeiculo() +
+                    " de placa " + veiculo3.getPlacaVeiculo() + " foi agendado. \nVocê deverá levar seu veículo no dia " +
+                    ag3.getData() + " às " + ag3.getHora() + ", o seu orçamento será R$" + diag3.getOrcamento() +
+                    "\nA oficina está localizada na cidade: " + ag3.getLocalizacao() + ". Muito obrigado por escolher a Porto Seguro!!");
+
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
         }

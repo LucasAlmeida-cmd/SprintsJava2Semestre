@@ -12,11 +12,9 @@ public class VeiculoDAOTest{
     @Test
     public void testAdicionarVeiculo() throws ParseException {
         VeiculoDAO veiculoDAO = new VeiculoDAO();
-
         Veiculo ve1 = new Veiculo("vw", "123", DateUtil.parseYear("2002"), 123, "1233");
-
+        Veiculo ve2 = new Veiculo("vw", "123", DateUtil.parseYear("2002"), 123, "1233");
         long idCliente = 1;
-
         ClienteDAO clienteDAO = new ClienteDAO();
         Cliente cliente = clienteDAO.buscarClientePorId(idCliente);
 
@@ -24,13 +22,14 @@ public class VeiculoDAOTest{
             System.out.println("Usuario nao encontrado");
         } else {
             veiculoDAO.adicionarVeiculo(cliente, ve1);
+            veiculoDAO.adicionarVeiculo(cliente, ve2);
         }
     }
 
     @Test
     public void buscarVeiculoPorId(){
         VeiculoDAO veiculoDAO = new VeiculoDAO();
-        Veiculo veiculo = veiculoDAO.buscarVeiculoPorId(1);
+        Veiculo veiculo = veiculoDAO.buscarVeiculoPorId(1L);
 
         if (veiculo == null) {
             System.out.println("Nenhum veículo encontrado para o ID.");
@@ -89,7 +88,14 @@ public class VeiculoDAOTest{
     @Test
     public void deletarVeiculo() throws ParseException {
         VeiculoDAO veiculoDAO = new VeiculoDAO();
-        veiculoDAO.deletarVeiculo(1L);
+        Long idVeiculo = 2L;
+        Veiculo veiculo = veiculoDAO.buscarVeiculoPorId(idVeiculo);
+
+        if (veiculo == null) {
+            System.out.println("Veiculo não encontrado!");
+        }else {
+            veiculoDAO.deletarVeiculo(veiculo.getIdVeiculo());
+        }
     }
 
 

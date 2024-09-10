@@ -15,7 +15,7 @@ public class Diagnostico {
         this.problemasExistentes = problemasExistentes;
         this.guincho = guincho;
 
-        if(cliente.isClientePorto()){
+        if(cliente.getClientePorto()){
             orcamento = 0.00;
         }
 

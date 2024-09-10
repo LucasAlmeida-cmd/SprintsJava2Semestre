@@ -19,7 +19,9 @@ public class ProblemasExistentesDAOTest {
         Long idPecaExistente = 1L;
         Peca pecaExistente = pecaDAO.buscarPecaPorId(idPecaExistente);
         ProblemasExistentes problema = new ProblemasExistentes("Teste2", "Teste", 100, 2, pecaExistente);
+        ProblemasExistentes problema2 = new ProblemasExistentes("Teste2", "Teste", 100, 2, pecaExistente);
         problemasDAO.adicionarProblemaExistente(problema);
+        problemasDAO.adicionarProblemaExistente(problema2);
 
 
     }
@@ -38,7 +40,6 @@ public class ProblemasExistentesDAOTest {
             System.out.println("Descrição: " + problema.getDescricaoProblema());
             System.out.println("Custo de Mão de Obra: " + problema.getCustoMaoDeObraProblema());
             System.out.println("Quantidade de Peças: " + problema.getQtdPeca());
-            System.out.println("Peça Associada: " + problema.getPeca().getNomePeca());
         } else {
             System.out.println("Nenhum problema encontrado com o ID: " + idProblema);
         }
@@ -49,9 +50,9 @@ public class ProblemasExistentesDAOTest {
         ProblemasExistentesDAO problemasDAO = new ProblemasExistentesDAO();
         PecaDAO pecaDAO = new PecaDAO();
         Long idProblema = 1L;
-        Long idPecaExistente = 2L;
+        Long idPecaExistente = 1L;
         Peca pecaExistente = pecaDAO.buscarPecaPorId(idPecaExistente);
-        ProblemasExistentes problema = new ProblemasExistentes("NovoTeste12", "Teste", 100, 2, pecaExistente);
+        ProblemasExistentes problema = new ProblemasExistentes("ProblemaAtualizado", "ProblemaAtualizado", 100, 2, pecaExistente);
         problemasDAO.atualizarProblemaExistente(idProblema, problema);
     }
 
@@ -73,7 +74,15 @@ public class ProblemasExistentesDAOTest {
     @Test
     public void deletandoProblema(){
         ProblemasExistentesDAO problemasExistentesDAO = new ProblemasExistentesDAO();
-        problemasExistentesDAO.deletarProblemaExistente(3L);
+        long idProblema = 2L;
+        ProblemasExistentes problema = problemasExistentesDAO.buscarProblemaPorId(idProblema);
+        if (problema == null) {
+            System.out.println("Problema não encontrado.");
+        }else {
+            System.out.println("Problema deletado com sucesso.");
+            problemasExistentesDAO.deletarProblemaExistente(idProblema);
+        }
+
     }
 
 

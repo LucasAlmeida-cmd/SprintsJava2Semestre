@@ -16,60 +16,57 @@ public class ProblemasExistentesDAO {
     }
 
     public void adicionarProblemaExistente(ProblemasExistentes problema) {
-        String sqlInsert = "INSERT INTO tb_qfx_problemas_existentes (nome_problema, descricao_problema, custo_mao_de_obra_problema, qtd_peca, id_peca) VALUES (?, ?, ?, ?, ?)";
-        try {
-            PreparedStatement comandoInsercao = conexao.prepareStatement(sqlInsert, new String[] {"id_problema"});
+        String sqlInsert = "INSERT INTO tb_qfx_problemas_existentes (id_peca, nome_problema, descricao_problema, custo_mao_de_obra_problema, qtd_peca) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement comandoInsercao = conexao.prepareStatement(sqlInsert, new String[] {"id_problema"})) {
 
+            comandoInsercao.setLong(1, problema.getPeca().getIdPeca());
+            comandoInsercao.setString(2, problema.getNomeProblema());
+            comandoInsercao.setString(3, problema.getDescricaoProblema());
+            comandoInsercao.setDouble(4, problema.getCustoMaoDeObraProblema());
+            comandoInsercao.setInt(5, problema.getQtdPeca());
 
-            comandoInsercao.setString(1, problema.getNomeProblema());
-            comandoInsercao.setString(2, problema.getDescricaoProblema());
-            comandoInsercao.setDouble(3, problema.getCustoMaoDeObraProblema());
-            comandoInsercao.setInt(4, problema.getQtdPeca());
-            comandoInsercao.setLong(5, problema.getPeca().getIdPeca());
+            comandoInsercao.executeUpdate();
 
-            int rowsAffected = comandoInsercao.executeUpdate();
-            if (rowsAffected == 0) {
-                throw new SQLException("Falha ao inserir o cliente, nenhuma linha foi afetada.");
-            }
             try (ResultSet generatedKeys = comandoInsercao.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                     problema.setIdProblemas(generatedKeys.getLong(1));
                 } else {
-                    throw new SQLException("Falha ao obter o ID gerado para o cliente.");
+                    throw new SQLException();
                 }
             }
 
-            System.out.println("Problema ok");
-
-            System.out.println("Problema existente inserido com sucesso!");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
+
     public ProblemasExistentes buscarProblemaPorId(long idProblema) {
         ProblemasExistentes problema = null;
-        try {
-            String sql = "SELECT * FROM tb_qfx_problemas_existentes WHERE id_problema = ?";
-            PreparedStatement pstmt = conexao.prepareStatement(sql);
+        String sql = "SELECT * FROM tb_qfx_problemas_existentes WHERE id_problema = ?";
+        try (PreparedStatement pstmt = conexao.prepareStatement(sql)) {
             pstmt.setLong(1, idProblema);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                problema = new ProblemasExistentes(
-                        rs.getString("nome_problema"),
-                        rs.getString("descricao_problema"),
-                        rs.getDouble("custo_mao_de_obra_problema"),
-                        rs.getInt("qtd_peca"),
-                        new Peca()
-                );
-                problema.setIdProblemas(rs.getLong("id_problema"));
+            try(ResultSet rs = pstmt.executeQuery()){
+                if (rs.next()) {
+                    problema = new ProblemasExistentes(
+                            rs.getString("nome_problema"),
+                            rs.getString("descricao_problema"),
+                            rs.getDouble("custo_mao_de_obra_problema"),
+                            rs.getInt("qtd_peca"),
+                            new Peca()
+                    );
+                    problema.setIdProblemas(rs.getLong("id_problema"));
+                }
             }
-            rs.close();
+
+
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return problema;
     }
+
 
     public void atualizarProblemaExistente(long idProblema, ProblemasExistentes problema) {
         try {
@@ -84,6 +81,7 @@ public class ProblemasExistentesDAO {
             pstmt.setLong(6, idProblema);
 
             pstmt.executeUpdate();
+            pstmt.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -92,27 +90,30 @@ public class ProblemasExistentesDAO {
 
     public ArrayList<ProblemasExistentes> listarProblemasExistentes() {
         ArrayList<ProblemasExistentes> problemas = new ArrayList<>();
-        try {
-            String sql = "SELECT * FROM tb_qfx_problemas_existentes";
-            PreparedStatement pstmt = conexao.prepareStatement(sql);
-            ResultSet rs = pstmt.executeQuery();
+        String sql = "SELECT * FROM tb_qfx_problemas_existentes";
+        try (PreparedStatement pstmt = conexao.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
             while (rs.next()) {
-                ProblemasExistentes problema = new ProblemasExistentes(
-                        rs.getString("nome_problema"),
-                        rs.getString("descricao_problema"),
-                        rs.getDouble("custo_mao_de_obra_problema"),
-                        rs.getInt("qtd_peca"),
-                        new Peca()
-                );
+                String nomeProblema = rs.getString("nome_problema");
+                String descricaoProblema = rs.getString("descricao_problema");
+                double custo = rs.getDouble("custo_mao_de_obra_problema");
+                int qtdPeca = rs.getInt("qtd_peca");
+                long idPeca = rs.getLong("id_peca");
+
+                Peca peca = new PecaDAO().buscarPecaPorId(idPeca);
+
+                ProblemasExistentes problema = new ProblemasExistentes(nomeProblema, descricaoProblema, custo, qtdPeca, peca);
                 problema.setIdProblemas(rs.getLong("id_problema"));
                 problemas.add(problema);
             }
-            rs.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return problemas;
     }
+
 
     public void deletarProblemaExistente(long idProblema) {
         try {
