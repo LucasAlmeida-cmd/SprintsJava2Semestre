@@ -56,7 +56,7 @@ public class AgendamentoDAOTest {
         Diagnostico diagnostico = new Diagnostico(cliente, veiculo, problemas, guincho );
         dao.adicionarDiagnostico(diagnostico);
 
-        Agendamento agendamento = new Agendamento(diagnostico, "11/11/11", "12:00", oficina);
+        Agendamento agendamento = new Agendamento(diagnostico, "12/11/11", "12:00", oficina);
         AgendamentoDAO agendamentoDAO = new AgendamentoDAO();
 
         agendamentoDAO.adicionarAgendamento(agendamento);

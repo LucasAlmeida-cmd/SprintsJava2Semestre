@@ -12,14 +12,17 @@ public class Main {
     public static void main(String[] args) throws ParseException {
         Scanner sc = new Scanner(System.in);
 
-        AgendamentoDAO agendamentoDAO = new AgendamentoDAO();
         ClienteDAO clienteDAO = new ClienteDAO();
-        DiagnosticoDAO diagnosticoDAO = new DiagnosticoDAO();
-        GuinchoDAO guinchoDAO = new GuinchoDAO();
-        OficinaDAO oficinaDAO = new OficinaDAO();
+        VeiculoDAO veiculoDAO = new VeiculoDAO();
+
         PecaDAO pecaDAO = new PecaDAO();
         ProblemasExistentesDAO problemasExistentesDAO = new ProblemasExistentesDAO();
-        VeiculoDAO veiculoDAO = new VeiculoDAO();
+
+        GuinchoDAO guinchoDAO = new GuinchoDAO();
+        DiagnosticoDAO diagnosticoDAO = new DiagnosticoDAO();
+
+        OficinaDAO oficinaDAO = new OficinaDAO();
+        AgendamentoDAO agendamentoDAO = new AgendamentoDAO();
 
 
 
@@ -27,8 +30,10 @@ public class Main {
         Guincho guincho1 = new Guincho("123", 250, 100000);
         Peca peca = new Peca("vira", 500.00, "Cotinental", "modelo1");
         Peca peca2 = new Peca("Vela", 250.00, "bosch", "modelo2");
+
         pecaDAO.adicionaPeca(peca);
         pecaDAO.adicionaPeca(peca2);
+        pecaDAO.fechar();
 
         Long idPecaExistente = 1L;
         Peca pecaExistente = pecaDAO.buscarPecaPorId(idPecaExistente);
@@ -61,25 +66,20 @@ public class Main {
         agendamentos.add(ag2);
 
         //Inserts
-        oficinaDAO.adicionarOficina(oficina);
-
-        guinchoDAO.adicionaGuincho(guincho1);
-        pecaDAO.adicionaPeca(peca);
-        pecaDAO.adicionaPeca(peca2);
+        clienteDAO.adicionarCliente(cliente);
+        clienteDAO.adicionarCliente(cliente2);
+        veiculoDAO.adicionarVeiculo(cliente, veiculo);
+        veiculoDAO.adicionarVeiculo(cliente2, veiculo2);
         problemasExistentesDAO.adicionarProblemaExistente(problema1);
         problemasExistentesDAO.adicionarProblemaExistente(problema2);
-
-        clienteDAO.adicionarCliente(cliente);
-        veiculoDAO.adicionarVeiculo(cliente, veiculo);
+        guinchoDAO.adicionaGuincho(guincho1);
         diagnosticoDAO.adicionarDiagnostico(diag1);
-        agendamentoDAO.adicionarAgendamento(ag1);
-
-        clienteDAO.adicionarCliente(cliente2);
-        veiculoDAO.adicionarVeiculo(cliente2, veiculo2);
         diagnosticoDAO.adicionarDiagnostico(diag2);
+        oficinaDAO.adicionarOficina(oficina);
+        agendamentoDAO.adicionarAgendamento(ag1);
         agendamentoDAO.adicionarAgendamento(ag2);
 
-        //
+        //Programa Principal
         System.out.println("Bem vindo(a) ao Canal Porto Seguro!!!");
         System.out.println("Por favor, inseira seu nome: ");
         String nomeCliente = sc.nextLine();
@@ -101,6 +101,9 @@ public class Main {
 
         Cliente cliente3 = new Cliente(nomeCliente, emailCliente, telefoneCliente, senhaCliente, clientePorto, cidadeCliente);
         clienteDAO.adicionarCliente(cliente3);
+
+
+
 
 
         System.out.println("Insira a marca do seu veículo: ");
@@ -144,10 +147,19 @@ public class Main {
             }
         }
 
+        //Fechamendo
+        clienteDAO.fecharConexao();
+        veiculoDAO.fecharConexao();
+        problemasExistentesDAO.fecharConexao();
+        guinchoDAO.fecharConexao();
+        oficinaDAO.fecharConexao();
+
+
 
 
         Diagnostico diag3 = new Diagnostico(cliente3, veiculo3, problema4, guincho1);
         diagnosticoDAO.adicionarDiagnostico(diag3);
+        diagnosticoDAO.fecharConexao();
 
         System.out.println("Você precisa de um Guincho ? (sim ou não)");
         String verificaGuincho = sc.nextLine();
@@ -164,33 +176,133 @@ public class Main {
                 diag3.setOrcamento(diag3.orcamentoPadrao());
             }
         }
-
-
-
-
-
         System.out.println("Digite o melhor dia para você ir até a oficina: (dd/mm/yyyy) ");
         String data = sc.nextLine();
         System.out.println("Digite o melhor horário para você ir até a oficina:");
         String hora = sc.nextLine();
 
 
-
         Agendamento ag3 = new Agendamento(diag3, data, hora, oficina);
-        agendamentoDAO.adicionarAgendamento(ag3);
 
-        try {
+        if (agendamentoDAO.verificarConflitoAgendamento(data, hora)) {
+            System.out.println("Já existe um agendamento para essa data e hora.");
+            System.out.println("Horários já ocupados:");
+            ArrayList<Agendamento> age = agendamentoDAO.listarAgendamentos();
+            for (Agendamento ag: age){
+                if (ag.getData().equals(ag3.getData())){
+                    System.out.println(ag.getHora());
+                }
+            }
+            System.out.println("\n");
+            System.out.println("Por favor, escolha outro horário: ");
+            String hora2 = sc.nextLine();
+            Agendamento ag4 = new Agendamento(diag3, data, hora2, oficina);
 
-            //ag3.verificaAgendamento();
+            System.out.println("Agendamento realizado com sucesso!");
+            agendamentoDAO.adicionarAgendamento(ag4);
+
+            System.out.println("Olá senhor(a) " + cliente3.getNomeCliente() + ", seu veículo " + veiculo3.getModeloVeiculo() +
+                    " de placa " + veiculo3.getPlacaVeiculo() + " foi agendado. \nVocê deverá levar seu veículo no dia " +
+                    ag4.getData() + " às " + ag4.getHora() + ", o seu orçamento será R$" + diag3.getOrcamento() +
+                    "\nA oficina está localizada na cidade: " + ag4.getOficina().getLocalizacaoOficina() + ". Muito obrigado por escolher a Porto Seguro!!");
+
+
+        } else {
+            agendamentoDAO.adicionarAgendamento(ag3);
+            System.out.println("Agendamento realizado com sucesso!");
             System.out.println("Olá senhor(a) " + cliente3.getNomeCliente() + ", seu veículo " + veiculo3.getModeloVeiculo() +
                     " de placa " + veiculo3.getPlacaVeiculo() + " foi agendado. \nVocê deverá levar seu veículo no dia " +
                     ag3.getData() + " às " + ag3.getHora() + ", o seu orçamento será R$" + diag3.getOrcamento() +
-                    "\nA oficina está localizada na cidade: " + ag3.getLocalizacao() + ". Muito obrigado por escolher a Porto Seguro!!");
+                    "\nA oficina está localizada na cidade: " + ag3.getOficina().getLocalizacaoOficina() + ". Muito obrigado por escolher a Porto Seguro!!");
 
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+        }
+        agendamentoDAO.fecharConexao();
+        System.out.println("\n");
+
+
+        System.out.println("Parte 2: ");
+        System.out.println("\n");
+        ClienteDAO clienteDAO1 = new ClienteDAO();
+        System.out.println("Lista Clientes até agora:");
+        ArrayList<Cliente> listaCliente = clienteDAO1.listarClientes();
+        for (Cliente x : listaCliente) {
+            System.out.println("ID: " + x.getIdCliente());
+            System.out.println("Nome: " + x.getNomeCliente());
+            System.out.println("Email: " + x.getEmailCliente());
+            System.out.println("Telefone: " + x.getTelefoneCliente());
+            System.out.println("Senha: " + x.getSenhaCliente());
+            System.out.println("Cliente Porto: " + (x.getClientePorto() ? "Sim" : "Não"));
+            System.out.println("Localização: " + x.getLocalizacaoCliente());
+            System.out.println("---------------------------");
         }
 
+        System.out.println("Qual cadastro você gostaria de atualizar ? (Digite o ID) ");
+        long idCliente2 = sc.nextLong();
+        clienteDAO1.buscarClientePorId(idCliente2);
+
+        System.out.println("Novo nome: ");
+        String nomeClienteNovo = sc.nextLine();
+        String nomeClienteNovo2 = sc.nextLine();
+
+        System.out.println("Novo email: ");
+        String emailClienteNovo = sc.nextLine();
+        System.out.println("Nova senha: ");
+        String senhaClienteNovo = sc.nextLine();
+        System.out.println("Novo telefone: ");
+        String telefoneClienteNovo = sc.nextLine();
+        System.out.println("Informe se você é cliente Porto Seguro (sim ou não): ");
+        String verificaClienteNovo = sc.nextLine();
+        System.out.println("Nova cidade: ");
+        String cidadeClienteNovo = sc.nextLine();
+
+        boolean clientePortoNovo = false;
+        if (verificaClienteNovo.equalsIgnoreCase("sim")) {
+            clientePortoNovo = true;
+        }
+        Cliente clienteAtualizado = new Cliente(nomeClienteNovo2, emailClienteNovo, telefoneClienteNovo, senhaClienteNovo, clientePortoNovo, cidadeClienteNovo);
+        clienteDAO1.atualizarCliente(idCliente2, clienteAtualizado);
+
+
+        System.out.println("Lista de Clientes Atualizada:");
+        ArrayList<Cliente> listaCliente2 = clienteDAO1.listarClientes();
+        for (Cliente x : listaCliente2) {
+            System.out.println("ID: " + x.getIdCliente());
+            System.out.println("Nome: " + x.getNomeCliente());
+            System.out.println("Email: " + x.getEmailCliente());
+            System.out.println("Telefone: " + x.getTelefoneCliente());
+            System.out.println("Senha: " + x.getSenhaCliente());
+            System.out.println("Cliente Porto: " + (x.getClientePorto() ? "Sim" : "Não"));
+            System.out.println("Localização: " + x.getLocalizacaoCliente());
+            System.out.println("---------------------------");
+        }
+        System.out.println("\n");
+
+        System.out.println("Parte 3: ");
+        System.out.println("\n");
+        System.out.println("Com os IDs abaixo escolha 1 para apagar: ");
+        for (Cliente x : listaCliente) {
+            System.out.println("ID: " + x.getIdCliente());
+            System.out.println("Nome: " + x.getNomeCliente());
+        }
+        System.out.println("Digite o ID: ");
+        Long idCliente = sc.nextLong();
+        clienteDAO1.removerCliente(idCliente);
+        System.out.println("\n");
+
+        System.out.println("Lista de Clientes Atualizada sem o ID: " + idCliente);
+        ArrayList<Cliente> listaCliente3 = clienteDAO1.listarClientes();
+        for (Cliente x : listaCliente3) {
+            System.out.println("ID: " + x.getIdCliente());
+            System.out.println("Nome: " + x.getNomeCliente());
+            System.out.println("Email: " + x.getEmailCliente());
+            System.out.println("Telefone: " + x.getTelefoneCliente());
+            System.out.println("Senha: " + x.getSenhaCliente());
+            System.out.println("Cliente Porto: " + (x.getClientePorto() ? "Sim" : "Não"));
+            System.out.println("Localização: " + x.getLocalizacaoCliente());
+            System.out.println("---------------------------");
+        }
+
+        clienteDAO1.fecharConexao();
         sc.close();
     }
 }

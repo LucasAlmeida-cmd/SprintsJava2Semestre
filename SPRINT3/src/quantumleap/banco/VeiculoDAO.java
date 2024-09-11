@@ -128,4 +128,13 @@ public class VeiculoDAO {
     }
 
 
+    public void fecharConexao(){
+        try{
+            conexao.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }

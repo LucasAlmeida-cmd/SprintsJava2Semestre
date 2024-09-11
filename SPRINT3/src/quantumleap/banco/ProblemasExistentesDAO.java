@@ -152,4 +152,12 @@ public class ProblemasExistentesDAO {
         }
         return problema;
     }
+
+    public void fecharConexao(){
+        try{
+            conexao.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

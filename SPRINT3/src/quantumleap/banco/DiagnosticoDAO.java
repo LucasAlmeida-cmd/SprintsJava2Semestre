@@ -42,14 +42,20 @@ public class DiagnosticoDAO {
     public Diagnostico buscarDiagnosticoPorId(Long idDiagnostico) {
         Diagnostico diagnostico = null;
         String sql = "SELECT * FROM tb_qfx_diagnostico WHERE id_diagnostico = ?";
+        ClienteDAO clienteDAO = new ClienteDAO();
+        VeiculoDAO veiculoDAO = new VeiculoDAO();
+        ProblemasExistentesDAO problemasExistentesDAO = new ProblemasExistentesDAO();
+        GuinchoDAO guinchoDAO = new GuinchoDAO();
+
         try (PreparedStatement pstmt = conexao.prepareStatement(sql)) {
             pstmt.setLong(1, idDiagnostico);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    Cliente cliente = new ClienteDAO().buscarClientePorId(rs.getLong("id_cliente"));
-                    Veiculo veiculo = new VeiculoDAO().buscarVeiculoPorId(rs.getLong("id_veiculo"));
-                    ProblemasExistentes problemasExistentes = new ProblemasExistentesDAO().buscarProblemasExistentesPorId(rs.getLong("id_problema"));
-                    Guincho guincho = new GuinchoDAO().buscarGuinchoPorId(rs.getLong("id_guincho"));
+                    Cliente cliente = clienteDAO.buscarClientePorId(rs.getLong("id_cliente"));
+                    Veiculo veiculo = veiculoDAO.buscarVeiculoPorId(rs.getLong("id_veiculo"));
+                    ProblemasExistentes problemasExistentes = problemasExistentesDAO.buscarProblemasExistentesPorId(rs.getLong("id_problema"));
+                    Guincho guincho = guinchoDAO.buscarGuinchoPorId(rs.getLong("id_guincho"));
+
                     diagnostico = new Diagnostico(cliente, veiculo, problemasExistentes, guincho);
                     diagnostico.setIdDiagnostico(idDiagnostico);
                 }
@@ -59,6 +65,7 @@ public class DiagnosticoDAO {
         }
         return diagnostico;
     }
+
 
     public void atualizarDiagnostico(long idDiagnostico, Diagnostico novoDiagnostico) {
         String sql = "UPDATE tb_qfx_diagnostico SET id_cliente = ?, id_veiculo = ?, id_problema = ?, id_guincho = ? WHERE id_diagnostico = ?";
@@ -108,5 +115,13 @@ public class DiagnosticoDAO {
             e.printStackTrace();
         }
         return diagnosticos;
+    }
+
+    public void fecharConexao(){
+        try{
+            conexao.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -13,7 +13,7 @@ public class ConnectionFactory {
         try {
             return DriverManager.getConnection(urlDeConexao, login, senha);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Erro ao abrir conexão com o banco de dados", e);
         }
     }
 }

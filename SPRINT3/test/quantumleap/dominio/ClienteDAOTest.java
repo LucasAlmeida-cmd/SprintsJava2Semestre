@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import quantumleap.banco.ClienteDAO;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class ClienteDAOTest {
 
@@ -18,8 +19,10 @@ public class ClienteDAOTest {
 
     @Test
     public void buscandoClienteP1orId() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("ID: ");
+        long idCliente = sc.nextLong();
         ClienteDAO clienteDAO = new ClienteDAO();
-        Long idCliente = 1L;
         Cliente cliente = clienteDAO.buscarClientePorId(idCliente);
 
         if (cliente == null) {

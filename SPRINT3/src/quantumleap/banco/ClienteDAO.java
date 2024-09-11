@@ -110,13 +110,22 @@ public class ClienteDAO {
 
 
 
-    public void removerCliente(Long id) {
-        String sql = "DELETE FROM tb_qfx_cliente WHERE id_cliente = ?";
-        try (PreparedStatement pstmt = conexao.prepareStatement(sql)) {
-            pstmt.setLong(1, id);
+    public void removerCliente(Long idCliente) {
+        String sqlDeleteCliente = "DELETE FROM tb_qfx_cliente WHERE id_cliente = ?";
+
+        try (PreparedStatement pstmt = conexao.prepareStatement(sqlDeleteCliente)) {
+            pstmt.setLong(1, idCliente);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void fecharConexao(){
+        try{
+            conexao.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 

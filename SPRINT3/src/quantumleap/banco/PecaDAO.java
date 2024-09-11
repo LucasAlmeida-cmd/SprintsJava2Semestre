@@ -6,6 +6,9 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class PecaDAO {
+    private Connection conexao;
+    public PecaDAO() {this.conexao = new ConnectionFactory().getConnection();}
+
 
     public void adicionaPeca(Peca peca) {
         String sqlInsert = "INSERT INTO tb_qfx_peca (nome_peca, preco_peca, marca_peca, modelo_peca) VALUES (?, ?, ?, ?)";
@@ -88,5 +91,13 @@ public class PecaDAO {
             throw new RuntimeException(e);
         }
         return pecas;
+    }
+
+    public void fechar(){
+        try{
+            conexao.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

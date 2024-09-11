@@ -17,6 +17,7 @@ public class AgendamentoDAO {
 
     public void adicionarAgendamento(Agendamento agendamento) {
         String sql = "INSERT INTO tb_qfx_agendamento (id_diagnostico, id_oficina, data_agendamento, hora_agendamento, descricao_agendamento) VALUES (?, ?, ?, ?, ?)";
+
         try (PreparedStatement pstmt = conexao.prepareStatement(sql, new String[] {"id_agendamento"})) {
             pstmt.setLong(1, agendamento.getDiagnostico().getIdDiagnostico());
             pstmt.setLong(2, agendamento.getOficina().getIdOficina());
@@ -36,6 +37,25 @@ public class AgendamentoDAO {
             throw new RuntimeException(e);
         }
     }
+
+
+    public boolean verificarConflitoAgendamento(String data, String hora) {
+        String sql = "SELECT COUNT(*) FROM tb_qfx_agendamento WHERE data_agendamento = ? AND hora_agendamento = ?";
+        try (PreparedStatement pstmt = conexao.prepareStatement(sql)) {
+            pstmt.setString(1, data);
+            pstmt.setString(2, hora);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        return false;
+    }
+
 
     public Agendamento buscarAgendamentoPorId(long idAgendamento) {
         String sql = "SELECT * FROM tb_qfx_agendamento WHERE id_agendamento = ?";
@@ -99,6 +119,10 @@ public class AgendamentoDAO {
         ArrayList<Agendamento> agendamentos = new ArrayList<>();
         String sql = "SELECT id_agendamento, id_diagnostico, id_oficina, data_agendamento, hora_agendamento, descricao_agendamento FROM tb_qfx_agendamento";
 
+
+        DiagnosticoDAO diagnosticoDAO = new DiagnosticoDAO();
+        OficinaDAO oficinaDAO = new OficinaDAO();
+
         try (PreparedStatement pstmt = conexao.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
 
@@ -109,20 +133,29 @@ public class AgendamentoDAO {
                 String dataAgendamento = rs.getString("data_agendamento");
                 String horaAgendamento = rs.getString("hora_agendamento");
 
-                Diagnostico diagnostico = new DiagnosticoDAO().buscarDiagnosticoPorId(idDiagnostico);
-                Oficina oficina = new OficinaDAO().buscarOficinaPorId(idOficina);
+                Diagnostico diagnostico = diagnosticoDAO.buscarDiagnosticoPorId(idDiagnostico);
+                Oficina oficina = oficinaDAO.buscarOficinaPorId(idOficina);
+
                 Agendamento agendamento = new Agendamento(diagnostico, dataAgendamento, horaAgendamento, oficina);
                 agendamento.setIdAgendamento(idAgendamento);
                 agendamentos.add(agendamento);
             }
 
         } catch (SQLException e) {
-
             throw new RuntimeException(e.getMessage(), e);
         }
 
         return agendamentos;
     }
+
+    public void fecharConexao(){
+        try{
+            conexao.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 
 }

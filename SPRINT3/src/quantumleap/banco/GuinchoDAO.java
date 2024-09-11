@@ -102,13 +102,11 @@ public class GuinchoDAO {
     }
 
 
-    public void fecharConexao() {
-        try {
-            if (conexao != null && !conexao.isClosed()) {
-                conexao.close();
-            }
+    public void fecharConexao(){
+        try{
+            conexao.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }

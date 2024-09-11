@@ -28,11 +28,23 @@ public class Agendamento {
         this.oficina = oficina;
     }
 
+//
+//    private static final AgendamentoDAO agendamentoDAO = new AgendamentoDAO();
+//
+//    public boolean verificaAgendamento() {
+//        ArrayList<Agendamento> agenda = agendamentoDAO.listarAgendamentos();
+//        for (Agendamento agendamento : agenda) {
+//            if (agendamento.getData().equals(this.getData()) && agendamento.getHora().equals(this.getHora())) {
+//                throw new IllegalArgumentException("Data e Hora já existentes");
+//            }
+//        }
+//        return true;
+//    }
 
-    public boolean verificaAgendamento() {
-        AgendamentoDAO agendamentoDAO = new AgendamentoDAO();
-        ArrayList<Agendamento> agenda = agendamentoDAO.listarAgendamentos();
-        for (Agendamento agendamento : agenda) {
+
+
+    public boolean verificaAgendamento(ArrayList<Agendamento> agendaParaVerificacao) {
+        for (Agendamento agendamento : agendaParaVerificacao) {
             if (agendamento.getData().equals(this.getData()) && agendamento.getHora().equals(this.getHora())) {
                 throw new IllegalArgumentException("Data e Hora já existentes");
             }
@@ -40,17 +52,6 @@ public class Agendamento {
         return true;
     }
 
-
-
-//    public boolean verificaAgendamento(Agendamento novoAgendamento) {
-//        AgendamentoDAO agendamentoDAO = new AgendamentoDAO();
-//        ArrayList<Agendamento> agenda = agendamentoDAO.listarAgendamentos();
-//        for (Agendamento agendamento : agenda) {
-//            if (agendamento.getData().equals(novoAgendamento.getData()) && agendamento.getHora().equals(novoAgendamento.getHora()))
-//                throw new IllegalArgumentException("Data e Hora já existentes");
-//        }
-//        return true;
-//    }
 
 
     public long getIdAgendamento() {
