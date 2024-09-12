@@ -26,7 +26,7 @@ public class PecaDAO {
 
     public Peca buscarPecaPorId(Long idPeca) {
         Peca peca = null;
-        String sql = "SELECT nome_peca, preco_peca, marca_peca, modelo_peca FROM tb_qfx_peca WHERE id_peca = ?";
+        String sql = "SELECT * FROM tb_qfx_peca WHERE id_peca = ?";
         try (Connection conexao = new ConnectionFactory().getConnection();
              PreparedStatement pstmt = conexao.prepareStatement(sql)) {
             pstmt.setLong(1, idPeca);
@@ -83,8 +83,8 @@ public class PecaDAO {
                 peca.setIdPeca(rs.getLong("id_peca"));
                 peca.setNomePeca(rs.getString("nome_peca"));
                 peca.setPrecoPeca(rs.getDouble("preco_peca"));
-                peca.setModeloPeca(rs.getString("modelo_peca"));
                 peca.setMarcaPeca(rs.getString("marca_peca"));
+                peca.setModeloPeca(rs.getString("modelo_peca"));
                 pecas.add(peca);
             }
         } catch (SQLException e) {

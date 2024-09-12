@@ -42,8 +42,8 @@ public class Main {
 
         Oficina oficina = new Oficina("oficina", "São Paulo", "11111111111", "oficina@gmail.com");
 
-        ProblemasExistentes problema1 = new ProblemasExistentes("nome1", "descrição1", 500.00, 3, pecaExistente);
-        ProblemasExistentes problema2 = new ProblemasExistentes("nome2", "descrição2", 1000.00, 1, pecaExistente2);
+        ProblemasExistentes problema1 = new ProblemasExistentes("Embreagem dura", "descrição1", 500.00, 3, pecaExistente);
+        ProblemasExistentes problema2 = new ProblemasExistentes("Barulho no motor", "descrição2", 1000.00, 1, pecaExistente2);
         ArrayList<ProblemasExistentes> problemas = new ArrayList<ProblemasExistentes>();
         problemas.add(problema1);
         problemas.add(problema2);
@@ -197,8 +197,6 @@ public class Main {
             System.out.println("Por favor, escolha outro horário: ");
             String hora2 = sc.nextLine();
             Agendamento ag4 = new Agendamento(diag3, data, hora2, oficina);
-
-            System.out.println("Agendamento realizado com sucesso!");
             agendamentoDAO.adicionarAgendamento(ag4);
 
             System.out.println("Olá senhor(a) " + cliente3.getNomeCliente() + ", seu veículo " + veiculo3.getModeloVeiculo() +
@@ -280,9 +278,11 @@ public class Main {
         System.out.println("Parte 3: ");
         System.out.println("\n");
         System.out.println("Com os IDs abaixo escolha 1 para apagar: ");
-        for (Cliente x : listaCliente) {
+        ArrayList<Cliente> listaCliente3 = clienteDAO1.listarClientes();
+        for (Cliente x : listaCliente3) {
             System.out.println("ID: " + x.getIdCliente());
             System.out.println("Nome: " + x.getNomeCliente());
+            System.out.println("---------------------------");
         }
         System.out.println("Digite o ID: ");
         Long idCliente = sc.nextLong();
@@ -290,8 +290,8 @@ public class Main {
         System.out.println("\n");
 
         System.out.println("Lista de Clientes Atualizada sem o ID: " + idCliente);
-        ArrayList<Cliente> listaCliente3 = clienteDAO1.listarClientes();
-        for (Cliente x : listaCliente3) {
+        ArrayList<Cliente> listaCliente4 = clienteDAO1.listarClientes();
+        for (Cliente x : listaCliente4) {
             System.out.println("ID: " + x.getIdCliente());
             System.out.println("Nome: " + x.getNomeCliente());
             System.out.println("Email: " + x.getEmailCliente());

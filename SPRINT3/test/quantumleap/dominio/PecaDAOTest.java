@@ -10,7 +10,7 @@ public class PecaDAOTest {
     @Test
     void adicionaPeca(){
         Peca peca = new Peca("Peça", 100, "teste", "teste");
-        Peca peca2 = new Peca("Peça", 100, "teste", "teste");
+        Peca peca2 = new Peca("Peça2", 100, "teste", "teste");
         PecaDAO pecaDAO = new PecaDAO();
         pecaDAO.adicionaPeca(peca2);
         pecaDAO.adicionaPeca(peca);

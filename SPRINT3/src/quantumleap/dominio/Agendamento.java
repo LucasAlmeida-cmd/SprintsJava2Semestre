@@ -28,31 +28,6 @@ public class Agendamento {
         this.oficina = oficina;
     }
 
-//
-//    private static final AgendamentoDAO agendamentoDAO = new AgendamentoDAO();
-//
-//    public boolean verificaAgendamento() {
-//        ArrayList<Agendamento> agenda = agendamentoDAO.listarAgendamentos();
-//        for (Agendamento agendamento : agenda) {
-//            if (agendamento.getData().equals(this.getData()) && agendamento.getHora().equals(this.getHora())) {
-//                throw new IllegalArgumentException("Data e Hora já existentes");
-//            }
-//        }
-//        return true;
-//    }
-
-
-
-    public boolean verificaAgendamento(ArrayList<Agendamento> agendaParaVerificacao) {
-        for (Agendamento agendamento : agendaParaVerificacao) {
-            if (agendamento.getData().equals(this.getData()) && agendamento.getHora().equals(this.getHora())) {
-                throw new IllegalArgumentException("Data e Hora já existentes");
-            }
-        }
-        return true;
-    }
-
-
 
     public long getIdAgendamento() {
         return idAgendamento;
@@ -95,7 +70,5 @@ public class Agendamento {
     }
 
 
-    public void setIdCliente(long idAgendamento) {
-        this.idAgendamento = idAgendamento;
-    }
+
 }

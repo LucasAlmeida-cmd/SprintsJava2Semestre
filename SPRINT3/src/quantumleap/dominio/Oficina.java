@@ -25,8 +25,6 @@ public class Oficina {
         return idOficina;
     }
 
-
-
     public String getNomeOficina() {
         return nomeOficina;
     }
